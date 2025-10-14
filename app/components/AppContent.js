@@ -1,8 +1,8 @@
 export function AboutMe() {
   return (
     <div className="p-6">
-      <h2 className="text-2xl font-bold mb-4">About Me</h2>
-      <div className="space-y-4">
+      <h2 className="text-3xl text-black font-bold mb-4">About Me</h2>
+      <div className="space-y-4 text-black text-lg">
         <p>
           <strong>Name:</strong> Muhammad Ahsan Sanadi
         </p>
@@ -26,24 +26,24 @@ export function AboutMe() {
 export function Projects() {
   return (
     <div className="p-6">
-      <h2 className="text-2xl font-bold mb-4">Projects</h2>
+      <h2 className="text-3xl font-bold mb-4">Projects</h2>
       <div className="space-y-6">
         <div className="border-l-4 border-blue-500 pl-4">
-          <h3 className="font-bold text-lg">Project 1</h3>
-          <p className="text-gray-600 mt-1">
+          <h3 className="font-bold text-xl">Project 1</h3>
+          <p className="text-gray-600 mt-1 text-lg">
             An innovative web application showcasing modern design principles
             and cutting-edge technology.
           </p>
         </div>
         <div className="border-l-4 border-green-500 pl-4">
-          <h3 className="font-bold text-lg">Project 2</h3>
-          <p className="text-gray-600 mt-1">
+          <h3 className="font-bold text-xl">Project 2</h3>
+          <p className="text-gray-600 mt-1 text-lg">
             A creative solution to a complex problem, built with passion and attention to detail.
           </p>
         </div>
         <div className="border-l-4 border-purple-500 pl-4">
-          <h3 className="font-bold text-lg">Project 3</h3>
-          <p className="text-gray-600 mt-1">
+          <h3 className="font-bold text-xl">Project 3</h3>
+          <p className="text-gray-600 mt-1 text-lg">
             An experimental project exploring new technologies and interaction patterns.
           </p>
         </div>
@@ -55,14 +55,14 @@ export function Projects() {
 export function Contacts() {
   return (
     <div className="p-6">
-      <h2 className="text-2xl font-bold mb-4">Contacts</h2>
-      <div className="space-y-4">
+      <h2 className="text-3xl font-bold mb-4">Contacts</h2>
+      <div className="space-y-4 text-lg">
         <p>
           I'd love to hear from you! Feel free to reach out through any of these channels:
         </p>
         <div className="space-y-3">
           <div className="flex items-center gap-3">
-            <span className="text-xl">📧</span>
+            <span className="text-2xl">📧</span>
             <div>
               <strong>Email:</strong>
               <br />
@@ -70,7 +70,7 @@ export function Contacts() {
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <span className="text-xl">💼</span>
+            <span className="text-2xl">💼</span>
             <div>
               <strong>LinkedIn:</strong>
               <br />
@@ -78,7 +78,7 @@ export function Contacts() {
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <span className="text-xl">🐙</span>
+            <span className="text-2xl">🐙</span>
             <div>
               <strong>GitHub:</strong>
               <br />
