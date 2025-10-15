@@ -18,23 +18,32 @@ export default function Desktop() {
   const [windows, setWindows] = useState([]);
   const [nextZIndex, setNextZIndex] = useState(1);
   const [selectedIconId, setSelectedIconId] = useState(null);
+  const [nextWindowId, setNextWindowId] = useState(1);
   const lastCenterPosition = useRef(null);
   const cascadeCount = useRef(0);
+  const desktopRef = useRef(null);
 
-  const handleDesktopClick = () => {
-    // Deselect any selected icon when clicking on desktop
-    setSelectedIconId(null);
+  const handleDesktopClick = (e) => {
+    // Only unfocus if clicking directly on the desktop, not on children
+    if (e.target === desktopRef.current) {
+      // Deselect any selected icon when clicking on desktop
+      setSelectedIconId(null);
+      
+      // Unfocus all windows
+      setWindows(prev => prev.map(w => ({ ...w, focused: false })));
+    }
   };
 
   const openApp = useCallback((appLabel) => {
     const app = apps.find(a => a.label === appLabel);
     if (!app) return;
 
-    // Check if window already exists
-    const existingWindow = windows.find(w => w.id === app.id);
-    if (existingWindow) {
-      // Focus existing window
-      focusWindow(app.id);
+    // Count how many windows of this app type are already open
+    const appWindowCount = windows.filter(w => w.appId === app.id).length;
+    
+    // Limit to 5 windows per app
+    if (appWindowCount >= 5) {
+      console.log(`Maximum of 5 ${app.label} windows reached`);
       return;
     }
 
@@ -60,9 +69,18 @@ export default function Desktop() {
       lastCenterPosition.current = { x: centerX, y: Math.max(60, centerY) };
     }
 
+    // Create unique window ID
+    const uniqueWindowId = `${app.id}-${nextWindowId}`;
+    
+    // Add instance number to title if multiple windows of same app
+    const windowTitle = appWindowCount > 0 
+      ? `${app.label} (${appWindowCount + 1})`
+      : app.label;
+
     const newWindow = {
-      id: app.id,
-      title: app.label,
+      id: uniqueWindowId,
+      appId: app.id,
+      title: windowTitle,
       icon: app.icon,
       content: app.content,
       focused: true,
@@ -76,7 +94,8 @@ export default function Desktop() {
       newWindow
     ]);
     setNextZIndex(nextZIndex + 1);
-  }, [windows, nextZIndex]);
+    setNextWindowId(nextWindowId + 1);
+  }, [windows, nextZIndex, nextWindowId]);
 
   const closeWindow = useCallback((windowId) => {
     setWindows(prev => prev.filter(w => w.id !== windowId));
@@ -118,10 +137,15 @@ export default function Desktop() {
     cascadeCount.current = 0;
   }, []);
 
+  const reorderWindows = useCallback((newWindowsOrder) => {
+    setWindows(newWindowsOrder);
+  }, []);
+
   return (
     <div 
-      className="fixed inset-0 overflow-hidden bg-cover bg-center bg-no-repeat"
-      style={{ backgroundImage: "url('/pixel-art.jpg')" }}
+      ref={desktopRef}
+      className="fixed inset-0 overflow-hidden bg-cover bg-center bg-no-repeat pb-0 md:pb-0"
+      style={{ backgroundImage: "url('/pixel-art.jpg')", paddingBottom: 'env(safe-area-inset-bottom)' }}
       onClick={handleDesktopClick}
     >
       <TopPanel
@@ -130,6 +154,7 @@ export default function Desktop() {
         onCloseAll={closeAllWindows}
         onFocusWindow={focusWindow}
         onCloseWindow={closeWindow}
+        onReorderWindows={reorderWindows}
       />
 
       {/* Desktop icons */}

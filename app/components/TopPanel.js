@@ -8,9 +8,13 @@ export default function TopPanel({
   onCloseAll,
   onFocusWindow,
   onCloseWindow,
+  onReorderWindows,
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [currentTime, setCurrentTime] = useState("");
+  const [currentDate, setCurrentDate] = useState("");
+  const [draggedIndex, setDraggedIndex] = useState(null);
+  const [dragOverIndex, setDragOverIndex] = useState(null);
   const menuRef = useRef(null);
 
   useEffect(() => {
@@ -22,26 +26,29 @@ export default function TopPanel({
       );
       const hours = wibTime.getHours().toString().padStart(2, "0");
       const minutes = wibTime.getMinutes().toString().padStart(2, "0");
-      setCurrentTime(`${hours}:${minutes}`);
+      const seconds = wibTime.getSeconds().toString().padStart(2, "0");
+      setCurrentTime(`${hours}:${minutes}:${seconds}`);
     };
 
     updateClock();
     const interval = setInterval(updateClock, 1000);
     return () => clearInterval(interval);
-    <div className="flex items-center gap-2">
-      <div className="text-white text-lg px-2 border-l border-gray-600">
-        {currentTime}
-      </div>
-      <div className="text-white text-lg px-2 border-l border-gray-600">
-        guest@Creos
-      </div>
-      <button
-        onClick={onCloseAll}
-        className="px-3 py-1 bg-gray-700 hover:bg-gray-600 border border-gray-500 text-white text-lg"
-      >
-        Show Desktop
-      </button>
-    </div>;
+  }, []);
+
+  useEffect(() => {
+    // Update date every day
+    const updateDate = () => {
+      const now = new Date();
+      const wibDate = new Date(
+        now.toLocaleString("en-US", { timeZone: "Asia/Jakarta" })
+      );
+      const options = { year: "numeric", month: "long", day: "numeric" };
+      setCurrentDate(wibDate.toLocaleDateString("en-US", options));
+    };
+
+    updateDate();
+    const interval = setInterval(updateDate, 60 * 60 * 1000); // Update every hour
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
@@ -65,7 +72,6 @@ export default function TopPanel({
     { label: "Projects", type: "app" },
     { label: "Contacts", type: "app" },
     { type: "separator" },
-    { label: "Settings", type: "system" },
     { label: "Reboot", type: "system" },
   ];
 
@@ -80,27 +86,75 @@ export default function TopPanel({
     setMenuOpen(false);
   };
 
+  // Drag and drop handlers for window list
+  const handleDragStart = (e, index) => {
+    setDraggedIndex(index);
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/html", e.target);
+  };
+
+  const handleDragOver = (e, index) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+    
+    if (draggedIndex !== null && draggedIndex !== index) {
+      setDragOverIndex(index);
+    }
+  };
+
+  const handleDragEnd = () => {
+    if (draggedIndex !== null && dragOverIndex !== null && draggedIndex !== dragOverIndex) {
+      // Reorder the windows array
+      const newWindows = [...windows];
+      const draggedWindow = newWindows[draggedIndex];
+      newWindows.splice(draggedIndex, 1);
+      newWindows.splice(dragOverIndex, 0, draggedWindow);
+      
+      if (onReorderWindows) {
+        onReorderWindows(newWindows);
+      }
+    }
+    
+    setDraggedIndex(null);
+    setDragOverIndex(null);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
   console.log("Menu state:", menuOpen); // Debug log
 
   return (
-    <div className="fixed top-0 left-0 right-0 h-10 bg-gray-800 border-b-2 border-gray-600 flex items-center justify-between px-2 z-50 overflow-visible">
-      {/* Left side: Menu and window list */}
-      <div className="flex items-center gap-3 flex-1 overflow-visible">
-        <div className="relative" style={{ zIndex: 100 }} ref={menuRef}>
+    <>
+      {/* Top Panel */}
+      <div className="fixed top-0 left-0 right-0 h-10 bg-gray-800 border-b-2 border-gray-600 flex items-center justify-between px-2 z-50 overflow-visible">
+        {/* Left side: Menu and window list */}
+        <div className="flex items-center gap-3 flex-1 min-w-0 overflow-visible">
+          <div
+            className="relative flex-shrink-0"
+            style={{ zIndex: 100 }}
+            ref={menuRef}
+          >
           <button
             onClick={() => {
               console.log("Menu button clicked, current state:", menuOpen);
               setMenuOpen(!menuOpen);
             }}
             className="bg-blue-600 hover:bg-blue-700 border-2 border-blue-400 text-white text-lg font-bold whitespace-nowrap shadow-md"
-            style={{ padding: "4px 10px" }}
+            style={{
+              paddingLeft: "10px",
+              paddingRight: "10px",
+              marginLeft: "10px",
+            }}
           >
             ☰ Menu
           </button>
 
           {menuOpen && (
             <div
-              className="absolute left-0 w-32 bg-gray-800 border-2 border-gray-600 shadow-xl"
+              className="absolute left-0 w-32 mt-2 bg-gray-800 border-2 border-gray-600 shadow-xl"
               style={{ top: "100%", zIndex: 9999 }}
             >
               {menuItems.map((item, index) =>
@@ -120,20 +174,38 @@ export default function TopPanel({
           )}
         </div>
 
-        {/* Window list */}
-        <div className="flex gap-2 items-center overflow-x-auto">
-          {windows.map((window) => (
+        {/* Window list - horizontally scrollable */}
+        <div className="flex gap-2 items-center overflow-x-auto flex-1 min-w-0 window-list-scroll">
+          {windows.map((window, index) => (
             <div
               key={window.id}
-              className={`flex items-center gap-2 px-3 py-1 text-lg border border-gray-500 whitespace-nowrap ${
+              draggable
+              onClick={(e) => e.stopPropagation()}
+              onDragStart={(e) => handleDragStart(e, index)}
+              onDragOver={(e) => handleDragOver(e, index)}
+              onDragEnd={handleDragEnd}
+              onDrop={handleDrop}
+              className={`flex items-center gap-2 px-3 py-1 text-lg border border-gray-500 whitespace-nowrap flex-shrink-0 cursor-move ${
                 window.focused
                   ? "bg-gray-600 text-white"
                   : "bg-gray-700 text-gray-300"
+              } ${
+                draggedIndex === index
+                  ? "opacity-50"
+                  : ""
+              } ${
+                dragOverIndex === index
+                  ? "border-blue-400 border-2"
+                  : ""
               }`}
+              style={{ paddingLeft: "10px", paddingRight: "10px" }}
             >
               <button
-                onClick={() => onFocusWindow(window.id)}
-                className="hover:underline"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onFocusWindow(window.id);
+                }}
+                className="hover:underline pointer-events-auto"
               >
                 {window.title}
               </button>
@@ -142,37 +214,69 @@ export default function TopPanel({
                   e.stopPropagation();
                   onCloseWindow(window.id);
                 }}
-                className="text-red-400 hover:text-red-300 font-bold text-xl leading-none"
+                className="text-red-400 hover:text-red-300 font-bold text-xl leading-none pointer-events-auto"
               >
                 ×
               </button>
             </div>
           ))}
         </div>
-      </div>
 
-      {/* Right side: Clock, system indicator, show desktop */}
-      <div className="flex items-center gap-2 ml-2">
+        {/* Mobile clock - Short format (HH:MM only) */}
         <div
-          className="text-white text-lg px-3 py-1 bg-gray-700 border border-gray-600"
+          className="md:hidden text-white text-lg px-3 bg-gray-700 border border-gray-600 whitespace-nowrap flex-shrink-0"
           style={{ paddingLeft: "10px", paddingRight: "10px" }}
         >
-          {currentTime}
+          {currentTime.substring(0, 5)}
+        </div>
+      </div>
+
+      {/* Right side: Clock, system indicator, date, show desktop - Hidden on mobile */}
+      <div className="hidden md:flex items-center gap-2 ml-2">
+        <div
+          className="text-white text-lg px-3 bg-gray-700 border border-gray-600"
+          style={{ paddingLeft: "10px", paddingRight: "10px" }}
+        >
+          {currentTime} UTC+7
         </div>
         <div
-          className="text-white text-lg px-3 py-1 bg-gray-700 border border-gray-600"
+          className="text-white text-lg px-3 bg-gray-700 border border-gray-600"
           style={{ paddingLeft: "10px", paddingRight: "10px" }}
         >
           guest@Creos
         </div>
+        <div
+          className="text-white text-lg px-3 bg-gray-700 border border-gray-600"
+          style={{ paddingLeft: "10px", paddingRight: "10px" }}
+        >
+          {currentDate}
+        </div>
         <button
           onClick={onCloseAll}
-          className="px-3 py-1 bg-gray-700 hover:bg-gray-600 border border-gray-500 text-white text-lg whitespace-nowrap"
+          className="px-3 bg-gray-700 hover:bg-red-700 border border-gray-500 text-white text-lg whitespace-nowrap"
           style={{ paddingLeft: "10px", paddingRight: "10px" }}
         >
           Close all windows
         </button>
       </div>
     </div>
+
+    {/* Bottom Panel - Only visible on mobile (Date and Close All button only) */}
+    <div className="md:hidden fixed bottom-0 left-0 right-0 h-10 bg-gray-800 border-t-2 border-gray-600 flex items-center justify-end px-2 z-50 gap-2 overflow-x-auto">
+      <div
+        className="text-white text-lg px-3 bg-gray-700 border border-gray-600 whitespace-nowrap flex-shrink-0"
+        style={{ paddingLeft: "10px", paddingRight: "10px" }}
+      >
+        {currentDate}
+      </div>
+      <button
+        onClick={onCloseAll}
+        className="px-3 bg-gray-700 hover:bg-red-700 border border-gray-500 text-white text-lg whitespace-nowrap flex-shrink-0"
+        style={{ paddingLeft: "10px", paddingRight: "10px" }}
+      >
+        Close all windows
+      </button>
+    </div>
+  </>
   );
 }

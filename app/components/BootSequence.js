@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 const bootMessages = [
   "[ OK ] Starting Creos Operating System v1.0",
@@ -31,6 +31,7 @@ const bootMessages = [
 
 export default function BootSequence({ onComplete }) {
   const [currentLine, setCurrentLine] = useState(0);
+  const containerRef = useRef(null);
 
   useEffect(() => {
     if (currentLine < bootMessages.length) {
@@ -47,8 +48,39 @@ export default function BootSequence({ onComplete }) {
     }
   }, [currentLine, onComplete]);
 
+  // Auto-scroll to bottom when new lines are added
+  useEffect(() => {
+    if (containerRef.current) {
+      containerRef.current.scrollTop = containerRef.current.scrollHeight;
+    }
+  }, [currentLine]);
+
+  // Prevent manual scrolling
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const preventScroll = (e) => {
+      e.preventDefault();
+      container.scrollTop = container.scrollHeight;
+    };
+
+    container.addEventListener('wheel', preventScroll, { passive: false });
+    container.addEventListener('touchmove', preventScroll, { passive: false });
+    container.addEventListener('scroll', preventScroll);
+
+    return () => {
+      container.removeEventListener('wheel', preventScroll);
+      container.removeEventListener('touchmove', preventScroll);
+      container.removeEventListener('scroll', preventScroll);
+    };
+  }, []);
+
   return (
-    <div className="fixed inset-0 bg-black text-white p-8 font-mono overflow-hidden">
+    <div 
+      ref={containerRef}
+      className="fixed inset-0 bg-black text-white p-8 font-mono overflow-y-auto cursor-hidden"
+    >
       <div className="space-y-1 text-lg">
         {bootMessages.slice(0, currentLine).map((message, index) => (
           <div key={index} className="animate-pulse-once">

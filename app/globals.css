@@ -43,20 +43,127 @@ body {
 
 ::-webkit-scrollbar-track {
   background: #c0c0c0;
+  border-left: 1px solid #ffffff;
+  border-top: 1px solid #ffffff;
+  border-right: 1px solid #808080;
+  border-bottom: 1px solid #808080;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #808080;
+  background: #c0c0c0;
   border: 2px solid #c0c0c0;
+  border-left: 2px solid #ffffff;
+  border-top: 2px solid #ffffff;
+  border-right: 2px solid #808080;
+  border-bottom: 2px solid #808080;
+  box-shadow: inset 1px 1px 0px #dfdfdf, inset -1px -1px 0px #a0a0a0;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #606060;
+  background: #b0b0b0;
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: #a0a0a0;
+  border-left: 2px solid #808080;
+  border-top: 2px solid #808080;
+  border-right: 2px solid #ffffff;
+  border-bottom: 2px solid #ffffff;
+}
+
+::-webkit-scrollbar-button {
+  background: #c0c0c0;
+  border: 2px solid #c0c0c0;
+  border-left: 2px solid #ffffff;
+  border-top: 2px solid #ffffff;
+  border-right: 2px solid #808080;
+  border-bottom: 2px solid #808080;
+  height: 16px;
+  width: 16px;
+}
+
+::-webkit-scrollbar-button:hover {
+  background: #d0d0d0;
+}
+
+::-webkit-scrollbar-button:active {
+  border-left: 2px solid #808080;
+  border-top: 2px solid #808080;
+  border-right: 2px solid #ffffff;
+  border-bottom: 2px solid #ffffff;
+}
+
+/* Up arrow */
+::-webkit-scrollbar-button:vertical:decrement {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%23000000' d='M8 4l-6 6h12z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* Down arrow */
+::-webkit-scrollbar-button:vertical:increment {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%23000000' d='M8 12l-6-6h12z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* Left arrow */
+::-webkit-scrollbar-button:horizontal:decrement {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%23000000' d='M4 8l6-6v12z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* Right arrow */
+::-webkit-scrollbar-button:horizontal:increment {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%23000000' d='M12 8l-6-6v12z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 /* Loading cursor animation */
 .cursor-loading {
   cursor: wait;
+}
+
+/* Hide cursor during boot sequence */
+.cursor-hidden {
+  cursor: none !important;
+}
+
+.cursor-hidden * {
+  cursor: none !important;
+}
+
+/* Window content styling */
+.window-content {
+  user-select: text;
+  cursor: text;
+}
+
+/* Drag cursor for window title bars */
+.cursor-move,
+.window-drag-handle {
+  cursor: move;
+}
+
+/* Horizontal scrollbar for window list */
+.window-list-scroll::-webkit-scrollbar {
+  height: 8px;
+}
+
+.window-list-scroll::-webkit-scrollbar-track {
+  background: #4a4a4a;
+}
+
+.window-list-scroll::-webkit-scrollbar-thumb {
+  background: #606060;
+  border-radius: 4px;
+  border: 1px solid #4a4a4a;
+}
+
+.window-list-scroll::-webkit-scrollbar-thumb:hover {
+  background: #707070;
 }
 
 /* React-rnd resize handle styling */

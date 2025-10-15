@@ -1,23 +1,35 @@
 export function AboutMe() {
   return (
-    <div className="p-6">
+    <div className="p-2">
       <h2 className="text-3xl text-black font-bold mb-4">About Me</h2>
-      <div className="space-y-4 text-black text-lg">
-        <p>
-          <strong>Name:</strong> Muhammad Ahsan Sanadi
-        </p>
-        <p>
-          Welcome to my interactive portfolio! This retro-styled operating system
-          interface showcases my work and passion for creative web development.
-        </p>
-        <p>
-          I enjoy building unique, engaging experiences that blend functionality
-          with creativity. This portfolio is a testament to that philosophy.
-        </p>
-        <p>
-          Feel free to explore the other windows to learn more about my projects
-          and get in touch!
-        </p>
+      <div className="flex mb-4 gap-4">
+        <div className="flex-none">
+          <img src="/lilith.png" alt="my kisah" className="w-32 h-32" />
+        </div>
+        <div className="text-black leading-none">
+          <p>
+            Hello! I'm <strong>Muhammad Ahsan Sanadi</strong>, a rather tech
+            enthusiast from Yogyakarta, Indonesia.
+          </p>
+          <p className="mt-2">
+            I don't really have any particular interest in one specific field of
+            IT. If it interests me, I will probably try it at 2 AM.
+          </p>
+        </div>
+      </div>
+      <div className="flex-none text-black leading-none">
+        <p>Some quick facts about me:</p>
+        <ul className="list-disc list-inside">
+          <li>Proud ThinkPad user</li>
+          <li>I used Arch before</li>
+          <li>I love Linux</li>
+          <li>
+            Although I did say no particular interest, I do want to be a good
+            DevOps engineer someday
+          </li>
+          <li>I'm good in English I think</li>
+          <li>Lilith does exist</li>
+        </ul>
       </div>
     </div>
   );
@@ -25,26 +37,59 @@ export function AboutMe() {
 
 export function Projects() {
   return (
-    <div className="p-6">
-      <h2 className="text-3xl font-bold mb-4">Projects</h2>
-      <div className="space-y-6">
-        <div className="border-l-4 border-blue-500 pl-4">
-          <h3 className="font-bold text-xl">Project 1</h3>
-          <p className="text-gray-600 mt-1 text-lg">
-            An innovative web application showcasing modern design principles
-            and cutting-edge technology.
+    <div className="p-2">
+      <div className="flex">
+        <img src="/Cake.png" alt="cake" className="w-32 mb-2 flex-none" />
+        <div className="ml-4">
+          <h2 className="text-3xl text-black font-bold flex-none">Projects</h2>
+          <p className="text-gray-600 mb-4 leading-none">
+            Some of my random creations and things I participated in
           </p>
         </div>
-        <div className="border-l-4 border-green-500 pl-4">
-          <h3 className="font-bold text-xl">Project 2</h3>
+      </div>
+      <div className="space-y-6 mt-5">
+        <div
+          className="border-l-4 border-blue-500 hover:border-4 pl-4"
+          onClick={() => window.open("https://handybox.andimsum.icu", "_blank")}
+          style={{ cursor: "pointer" }}
+        >
+          <h3 className="font-bold text-black text-xl">HandyBox</h3>
           <p className="text-gray-600 mt-1 text-lg">
-            A creative solution to a complex problem, built with passion and attention to detail.
+            A website that serves various kind of handy calculating tools.
+            Deprecated, although I might revive it in the future.
           </p>
         </div>
-        <div className="border-l-4 border-purple-500 pl-4">
-          <h3 className="font-bold text-xl">Project 3</h3>
+        <div
+          className="border-l-4 border-green-500 hover:border-4 pl-4"
+          onClick={() =>
+            window.open("https://handybox.andimsum.icu/ReminderBuddy", "_blank")
+          }
+          style={{ cursor: "pointer" }}
+        >
+          <h3 className="font-bold text-black text-xl">ReminderBuddy</h3>
           <p className="text-gray-600 mt-1 text-lg">
-            An experimental project exploring new technologies and interaction patterns.
+            Telegram bot that is supposed to help you set reminders and
+            schedules. I made this merely for school assignment. Deprecated.
+          </p>
+        </div>
+        <div
+          className="border-l-4 border-pink-500 hover:border-4 pl-4"
+          onClick={() => window.open("https://snaplove.pics/", "_blank")}
+          style={{ cursor: "pointer" }}
+        >
+          <h3 className="font-bold text-black text-xl">SnapLove (Slaviors)</h3>
+          <p className="text-gray-600 mt-1 text-lg">
+            An SaaS website that serves digital photobooth.
+          </p>
+        </div>
+        <div
+          className="border-l-4 border-purple-500 hover:border-4 pl-4"
+          onClick={() => window.open("http://localhost:3000", "_self")}
+          style={{ cursor: "pointer" }}
+        >
+          <h3 className="font-bold text-black text-xl">This Website</h3>
+          <p className="text-gray-600 mt-1 text-lg">
+            If you click this, the site might reload idk
           </p>
         </div>
       </div>
@@ -54,38 +99,68 @@ export function Projects() {
 
 export function Contacts() {
   return (
-    <div className="p-6">
-      <h2 className="text-3xl font-bold mb-4">Contacts</h2>
-      <div className="space-y-4 text-lg">
-        <p>
-          I'd love to hear from you! Feel free to reach out through any of these channels:
-        </p>
-        <div className="space-y-3">
-          <div className="flex items-center gap-3">
-            <span className="text-2xl">📧</span>
-            <div>
-              <strong>Email:</strong>
-              <br />
-              <span className="text-blue-600">your.email@example.com</span>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <span className="text-2xl">💼</span>
-            <div>
-              <strong>LinkedIn:</strong>
-              <br />
-              <span className="text-blue-600">linkedin.com/in/yourprofile</span>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <span className="text-2xl">🐙</span>
-            <div>
-              <strong>GitHub:</strong>
-              <br />
-              <span className="text-blue-600">github.com/yourusername</span>
+    <div className="p-2">
+      <div className="flex">
+        <div className="ml-4">
+          <h2 className="text-3xl text-black font-bold flex-none">Contacts</h2>
+          <p className="text-gray-600 mb-4 mr-4 leading-none">
+            Contact me and say hi maybe
+          </p>
+          <div className="space-y-4 text-black text-lg">
+            <div className="space-y-3">
+              <div className="flex items-center gap-3 pb-2">
+                <img src="/email-icon-99.png" alt="Email" className="w-8" />
+                <div className="leading-none">
+                  <strong>Email:</strong>
+                  <br />
+                  <span className="text-blue-600">
+                    ahsansanadi167@gmail.com
+                  </span>
+                </div>
+              </div>
+              <div
+                className="flex items-center gap-3 pb-2 hover:cursor-pointer"
+                onClick={() =>
+                  window.open("https://www.linkedin.com/in/andimsum/", "_blank")
+                }
+              >
+                {/* LinkedIn logo */}
+                <img
+                  src="/LinkedIn-Emblema.png"
+                  alt="LinkedIn"
+                  className="w-8"
+                />
+                <div className="leading-none">
+                  <strong>LinkedIn:</strong>
+                  <br />
+                  <span className="text-blue-600">
+                    linkedin.com/in/andimsum/
+                  </span>
+                </div>
+              </div>
+              <div
+                className="flex items-center gap-3 pb-2 hover:cursor-pointer"
+                onClick={() =>
+                  window.open("https://github.com/AkuSeorangManusia", "_blank")
+                }
+              >
+                <img src="github-icon.png" alt="GitHub" className="w-8" />
+                <div className="leading-none">
+                  <strong>GitHub:</strong>
+                  <br />
+                  <span className="text-blue-600">
+                    github.com/AkuSeorangManusia/
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
+        <img
+          src="/address-me.jpg"
+          alt="address me"
+          className="w-32 mb-2 flex-none ml-auto self-start"
+        />
       </div>
     </div>
   );

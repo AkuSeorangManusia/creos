@@ -5,7 +5,6 @@ import { Rnd } from "react-rnd";
 import Image from "next/image";
 
 export default function Window({
-  id,
   title,
   icon,
   children,
@@ -17,8 +16,15 @@ export default function Window({
 }) {
   const MIN_WIDTH = 400;
   const MIN_HEIGHT = 300;
-  const MAX_WIDTH = typeof window !== 'undefined' ? window.innerWidth - 100 : 1200;
-  const MAX_HEIGHT = typeof window !== 'undefined' ? window.innerHeight - 150 : 800;
+  
+  // Account for top panel (40px) and bottom panel on mobile (40px)
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+  const verticalOffset = isMobile ? 120 : 90; // Extra space on mobile for bottom panel
+  
+  const MAX_WIDTH =
+    typeof window !== "undefined" ? window.innerWidth - 100 : 1200;
+  const MAX_HEIGHT =
+    typeof window !== "undefined" ? window.innerHeight - verticalOffset : 800;
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -30,6 +36,11 @@ export default function Window({
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [focused, onClose]);
+
+  const handleMouseDown = (e) => {
+    e.stopPropagation(); // Prevent desktop click handler from unfocusing
+    onFocus();
+  };
 
   return (
     <Rnd
@@ -45,11 +56,17 @@ export default function Window({
       maxHeight={MAX_HEIGHT}
       bounds="window"
       dragHandleClassName="window-drag-handle"
-      onMouseDown={onFocus}
+      onMouseDown={handleMouseDown}
+      onDrag={(e) => {
+        e.stopPropagation();
+      }}
       onDragStop={(e, d) => {
+        e.stopPropagation();
         if (onMove) {
           onMove({ x: d.x, y: d.y });
         }
+        // Ensure window stays focused after dragging
+        onFocus();
       }}
       className={`bg-gray-200 border-2 border-gray-400 shadow-2xl ${
         focused ? "z-40" : "z-30"
@@ -71,18 +88,13 @@ export default function Window({
     >
       {/* Title bar */}
       <div
-        className={`window-drag-handle flex items-center justify-between px-2 py-1 cursor-move ${
+        className={`flex items-center justify-between px-2 py-1 ${
           focused ? "bg-blue-600" : "bg-gray-500"
         }`}
       >
-        <div className="flex items-center gap-2">
+        <div className="window-drag-handle flex items-center gap-2 cursor-move flex-1">
           <div className="relative w-6 h-6">
-            <Image
-              src={icon}
-              alt={title}
-              fill
-              className="object-contain"
-            />
+            <Image src={icon} alt={title} fill className="object-contain" />
           </div>
           <span className="text-white font-semibold text-lg">{title}</span>
         </div>
@@ -91,14 +103,32 @@ export default function Window({
             e.stopPropagation();
             onClose();
           }}
-          className="w-7 h-7 bg-red-500 hover:bg-red-600 text-white font-bold text-lg flex items-center justify-center"
+          onTouchEnd={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            onClose();
+          }}
+          onMouseDown={(e) => {
+            e.stopPropagation();
+          }}
+          onTouchStart={(e) => {
+            e.stopPropagation();
+          }}
+          className="w-7 h-7 bg-red-500 hover:bg-red-600 text-white font-bold text-lg flex items-center justify-center touch-manipulation flex-shrink-0"
         >
           ×
         </button>
       </div>
 
       {/* Content */}
-      <div className="overflow-auto bg-white flex-1">
+      <div
+        className="overflow-auto bg-white flex-1 window-content"
+        style={{
+          paddingLeft: "10px",
+          paddingRight: "10px",
+          // paddingTop: "5px",
+        }}
+      >
         {children}
       </div>
     </Rnd>

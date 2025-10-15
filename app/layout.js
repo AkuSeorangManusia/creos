@@ -8,13 +8,16 @@ const vt323 = VT323({
 });
 
 export const metadata = {
-  title: "Creos - Muhammad Ahsan Sanadi",
-  description: "Interactive retro OS portfolio",
+  title: "Dim's Desktop",
+  description: "Interactive retro OS portfolio kinda",
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <head>
+        <script src="https://cdn.tailwindcss.com"></script>
+      </head>
       <body className={`${vt323.variable} antialiased`}>
         {children}
       </body>

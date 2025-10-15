@@ -47,7 +47,7 @@ export default function DesktopIcon({ icon, label, isSelected, onSelect, onDoubl
         />
       </div>
       <div
-        className="text-white mt-4 text-center text-lg leading-tight transition-all drop-shadow-[0_2px_3px_rgba(0,0,0,0.9)]"
+        className="text-white text-center text-lg leading-none tracking-tight transition-all drop-shadow-[0_2px_3px_rgba(0,0,0,0.9)]"
         style={{
           textShadow:
             "1px 1px 2px rgba(0,0,0,0.9), -1px -1px 2px rgba(0,0,0,0.9), 1px -1px 2px rgba(0,0,0,0.9), -1px 1px 2px rgba(0,0,0,0.9)",
