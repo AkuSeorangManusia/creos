@@ -84,7 +84,7 @@ export function Projects() {
         </div>
         <div
           className="border-l-4 border-purple-500 hover:border-4 pl-4"
-          onClick={() => window.open("http://localhost:3000", "_self")}
+          onClick={() => window.open("https://andimsum.icu", "_self")}
           style={{ cursor: "pointer" }}
         >
           <h3 className="font-bold text-black text-xl">This Website</h3>
