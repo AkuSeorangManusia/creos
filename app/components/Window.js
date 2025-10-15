@@ -56,6 +56,8 @@ export default function Window({
       maxHeight={MAX_HEIGHT}
       bounds="window"
       dragHandleClassName="window-drag-handle"
+      enableUserSelectHack={false}
+      disableDragging={false}
       onMouseDown={handleMouseDown}
       onDrag={(e) => {
         e.stopPropagation();
@@ -74,6 +76,7 @@ export default function Window({
       style={{
         display: "flex",
         flexDirection: "column",
+        touchAction: "none",
       }}
       enableResizing={{
         bottom: true,
@@ -84,6 +87,13 @@ export default function Window({
         top: false,
         topLeft: false,
         topRight: false,
+      }}
+      resizeHandleStyles={{
+        bottom: { cursor: "ns-resize", touchAction: "none" },
+        bottomLeft: { cursor: "nesw-resize", touchAction: "none" },
+        bottomRight: { cursor: "nwse-resize", touchAction: "none" },
+        left: { cursor: "ew-resize", touchAction: "none" },
+        right: { cursor: "ew-resize", touchAction: "none" },
       }}
     >
       {/* Title bar */}
