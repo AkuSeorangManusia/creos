@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 export function AboutMe() {
   return (
     <div className="p-2">
@@ -98,6 +100,14 @@ export function Projects() {
 }
 
 export function Contacts() {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopyDiscord = () => {
+    navigator.clipboard.writeText("andimsum_");
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1000);
+  };
+
   return (
     <div className="p-2">
       <div className="flex">
@@ -108,36 +118,40 @@ export function Contacts() {
           </p>
           <div className="space-y-4 text-black text-lg">
             <div className="space-y-3">
+              {/* Email */}
               <div className="flex items-center gap-3 pb-2">
                 <img src="/email-icon-99.png" alt="Email" className="w-8" />
                 <div className="leading-none">
-                  <strong>Email:</strong>
+                  <strong>Email</strong>
                   <br />
                   <span className="text-blue-600">
                     ahsansanadi167@gmail.com
                   </span>
                 </div>
               </div>
+
+              {/* LinkedIn */}
               <div
                 className="flex items-center gap-3 pb-2 hover:cursor-pointer"
                 onClick={() =>
                   window.open("https://www.linkedin.com/in/andimsum/", "_blank")
                 }
               >
-                {/* LinkedIn logo */}
                 <img
                   src="/LinkedIn-Emblema.png"
                   alt="LinkedIn"
                   className="w-8"
                 />
                 <div className="leading-none">
-                  <strong>LinkedIn:</strong>
+                  <strong>LinkedIn</strong>
                   <br />
                   <span className="text-blue-600">
                     linkedin.com/in/andimsum/
                   </span>
                 </div>
               </div>
+
+              {/* GitHub */}
               <div
                 className="flex items-center gap-3 pb-2 hover:cursor-pointer"
                 onClick={() =>
@@ -146,11 +160,45 @@ export function Contacts() {
               >
                 <img src="github-icon.png" alt="GitHub" className="w-8" />
                 <div className="leading-none">
-                  <strong>GitHub:</strong>
+                  <strong>GitHub</strong>
                   <br />
                   <span className="text-blue-600">
                     github.com/AkuSeorangManusia/
                   </span>
+                </div>
+              </div>
+
+              {/* Instagram */}
+              <div
+                className="flex items-center gap-3 pb-2 hover:cursor-pointer"
+                onClick={() =>
+                  window.open("https://www.instagram.com/andimsum_", "_blank")
+                }
+              >
+                <img src="instagram-icon.png" alt="Instagram" className="w-8" />
+                <div className="leading-none">
+                  <strong>Instagram</strong>
+                  <br />
+                  <span className="text-blue-600">instagram.com/andimsum_</span>
+                </div>
+              </div>
+
+              {/* Discord */}
+              <div
+                className="flex items-center gap-3 pb-2 hover:cursor-pointer"
+                onClick={handleCopyDiscord}
+              >
+                <img
+                  src="discord-icon.jpg"
+                  alt="Discord"
+                  className="w-8 rounded"
+                />
+                <div className="leading-none">
+                  <strong>Discord</strong>
+                  <br />
+                  <span className="text-blue-600">andimsum_</span>
+                  <br />
+                  {copied && <span className="text-green-600">Copied!</span>}
                 </div>
               </div>
             </div>
