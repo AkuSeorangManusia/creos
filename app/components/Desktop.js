@@ -4,7 +4,9 @@ import { useState, useCallback, useRef } from "react";
 import TopPanel from "./TopPanel";
 import DesktopIcon from "./DesktopIcon";
 import Window from "./Window";
+import Widget from "./Widget";
 import { AboutMe, Projects, Contacts } from "./AppContent";
+import { ClockWidget, DiscordPresenceWidget } from "./WidgetContent";
 
 const apps = [
   { id: "about", label: "About Me", icon: "/about-me-icon.png", content: AboutMe },
@@ -12,10 +14,45 @@ const apps = [
   { id: "contacts", label: "Contacts", icon: "/contact-icon.png", content: Contacts },
 ];
 
+// Calculate positions for right side of screen (accounting for widget width + margin)
+const getInitialWidgets = () => {
+  const rightMargin = 20;
+  const clockWidth = 200;
+  const discordWidth = 200;
+  
+  return [
+    { 
+      id: "clock", 
+      title: "Clock", 
+      content: ClockWidget, 
+      position: { 
+        x: typeof window !== 'undefined' ? window.innerWidth - clockWidth - rightMargin : window.innerWidth - 220,
+        y: 80 
+      }, 
+      width: clockWidth, 
+      height: 150,
+      dynamicHeight: false,
+    },
+    { 
+      id: "discord", 
+      title: "Discord", 
+      content: DiscordPresenceWidget, 
+      position: { 
+        x: typeof window !== 'undefined' ? window.innerWidth - discordWidth - rightMargin : window.innerWidth - 220,
+        y: 250 
+      }, 
+      width: discordWidth, 
+      height: 180,
+      dynamicHeight: true,
+    },
+  ];
+};
+
 const CASCADE_OFFSET = 30; // Offset for cascading windows
 
 export default function Desktop() {
   const [windows, setWindows] = useState([]);
+  const [widgets, setWidgets] = useState(getInitialWidgets());
   const [nextZIndex, setNextZIndex] = useState(1);
   const [selectedIconId, setSelectedIconId] = useState(null);
   const [nextWindowId, setNextWindowId] = useState(1);
@@ -141,6 +178,10 @@ export default function Desktop() {
     setWindows(newWindowsOrder);
   }, []);
 
+  const closeWidget = useCallback((widgetId) => {
+    setWidgets(prev => prev.filter(w => w.id !== widgetId));
+  }, []);
+
   return (
     <div 
       ref={desktopRef}
@@ -186,6 +227,25 @@ export default function Desktop() {
         >
           <window.content />
         </Window>
+      ))}
+
+      {/* Widgets */}
+      {widgets.map(widget => (
+        <Widget
+          key={widget.id}
+          id={widget.id}
+          title={widget.title}
+          onClose={() => closeWidget(widget.id)}
+          initialPosition={widget.position}
+          width={widget.width}
+          height={widget.height}
+          dynamicHeight={widget.dynamicHeight}
+        >
+          {widget.dynamicHeight 
+            ? ({ onHeightChange }) => <widget.content onHeightChange={onHeightChange} />
+            : <widget.content />
+          }
+        </Widget>
       ))}
     </div>
   );

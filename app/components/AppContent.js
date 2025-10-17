@@ -30,7 +30,7 @@ export function AboutMe() {
             DevOps engineer someday
           </li>
           <li>I'm good in English I think</li>
-          <li>Lilith does exist</li>
+          <li>I believe Lilith exist</li>
         </ul>
       </div>
     </div>
@@ -102,7 +102,7 @@ export function Projects() {
 export function Contacts() {
   const [copied, setCopied] = useState(false);
 
-  const handleCopyDiscord = () => {
+  const handleCopy = () => {
     navigator.clipboard.writeText("andimsum_");
     setCopied(true);
     setTimeout(() => setCopied(false), 1000);
@@ -119,7 +119,10 @@ export function Contacts() {
           <div className="space-y-4 text-black text-lg">
             <div className="space-y-3">
               {/* Email */}
-              <div className="flex items-center gap-3 pb-2">
+              <div
+                className="flex items-center gap-3 pb-2 hover:cursor-pointer"
+                onClick={handleCopy}
+              >
                 <img src="/email-icon-99.png" alt="Email" className="w-8" />
                 <div className="leading-none">
                   <strong>Email</strong>
@@ -127,6 +130,8 @@ export function Contacts() {
                   <span className="text-blue-600">
                     ahsansanadi167@gmail.com
                   </span>
+                  <br />
+                  {copied && <span className="text-green-600">Copied!</span>}
                 </div>
               </div>
 
@@ -186,7 +191,7 @@ export function Contacts() {
               {/* Discord */}
               <div
                 className="flex items-center gap-3 pb-2 hover:cursor-pointer"
-                onClick={handleCopyDiscord}
+                onClick={handleCopy}
               >
                 <img
                   src="discord-icon.jpg"
