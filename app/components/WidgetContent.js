@@ -52,8 +52,17 @@ export function DiscordPresenceWidget({ onHeightChange }) {
   const [presence, setPresence] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [currentTime, setCurrentTime] = useState(Date.now());
   
   const DISCORD_USER_ID = "687912745042968590";
+
+  // Update current time every second for smooth progress bar
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTime(Date.now());
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     const fetchPresence = async () => {
@@ -95,7 +104,7 @@ export function DiscordPresenceWidget({ onHeightChange }) {
     let requiredHeight = 60; // Base height for status
 
     if (spotify) {
-      requiredHeight += 70; // Spotify section
+      requiredHeight += 100; // Spotify section with progress bar (increased from 70)
     }
 
     if (mainActivity) {
@@ -147,7 +156,28 @@ export function DiscordPresenceWidget({ onHeightChange }) {
 
   const spotify = presence.spotify;
   const activities = presence.activities || [];
-  const mainActivity = activities.find(a => a.type !== 4); // Exclude custom status
+  // Exclude custom status (type 4) and Spotify activities (name "Spotify")
+  const mainActivity = activities.find(a => a.type !== 4 && a.name !== "Spotify");
+
+  // Helper function to format time in mm:ss
+  const formatTime = (ms) => {
+    const totalSeconds = Math.floor(ms / 1000);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  };
+
+  // Calculate Spotify progress
+  let spotifyProgress = 0;
+  let currentPosition = 0;
+  let totalDuration = 0;
+  if (spotify?.timestamps) {
+    const start = spotify.timestamps.start;
+    const end = spotify.timestamps.end;
+    totalDuration = end - start;
+    currentPosition = currentTime - start;
+    spotifyProgress = Math.min(Math.max((currentPosition / totalDuration) * 100, 0), 100);
+  }
 
   return (
     <div className="flex flex-col h-full text-black text-xs">
@@ -164,10 +194,25 @@ export function DiscordPresenceWidget({ onHeightChange }) {
             <span className="text-green-600 font-bold">♫</span>
             <span className="font-semibold">Listening to Spotify</span>
           </div>
-          <div className="text-xs">
+          <div className="text-xs mb-2">
             <div className="font-bold truncate">{spotify.song}</div>
             <div className="text-gray-600 truncate">by {spotify.artist}</div>
           </div>
+          {/* Progress Bar */}
+          {spotify.timestamps && (
+            <div className="mt-2">
+              <div className="flex items-center gap-1 text-xs text-gray-600 mb-1">
+                <span className="w-10 text-right">{formatTime(currentPosition)}</span>
+                <div className="flex-1 bg-gray-300 h-1 rounded-full overflow-hidden">
+                  <div 
+                    className="bg-green-600 h-full transition-all duration-1000 ease-linear"
+                    style={{ width: `${spotifyProgress}%` }}
+                  ></div>
+                </div>
+                <span className="w-10">{formatTime(totalDuration)}</span>
+              </div>
+            </div>
+          )}
         </div>
       )}
 
