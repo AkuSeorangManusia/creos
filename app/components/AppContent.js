@@ -4,10 +4,12 @@ export function AboutMe() {
   return (
     <div className="p-2">
       <h2 className="text-3xl text-black font-bold mb-4">About Me</h2>
-      <div className="flex mb-4 gap-4">
-        <div className="flex-none">
-          <img src="/lilith.png" alt="my kisah" className="w-32 h-32" />
-        </div>
+      <div className="mb-4">
+        <img 
+          src="/lilith.png" 
+          alt="my kisah" 
+          className="w-30 h-30 float-left mr-4 mb-2" 
+        />
         <div className="text-black leading-none">
           <p>
             Hello! I'm <strong>Muhammad Ahsan Sanadi</strong>, a rather tech
@@ -15,11 +17,11 @@ export function AboutMe() {
           </p>
           <p className="mt-2">
             I don't really have any particular interest in one specific field of
-            IT. If it interests me, I will probably try it at 2 AM.
+            IT. If something interests me, I will probably try it at 2 AM.
           </p>
         </div>
       </div>
-      <div className="flex-none text-black leading-none">
+      <div className="flex-none text-black leading-none clear-left">
         <p>Some quick facts about me:</p>
         <ul className="list-disc list-inside">
           <li>Proud ThinkPad user</li>
@@ -215,6 +217,19 @@ export function Contacts() {
           className="w-32 mb-2 flex-none ml-auto self-start"
         />
       </div>
+    </div>
+  );
+}
+
+export function Guestbook() {
+  return (
+    <div className="w-full h-full flex flex-col">
+      <iframe
+        src="https://andimsum.atabook.org"
+        className="w-full h-full border-0"
+        title="Guestbook"
+        style={{ minHeight: "700px" }}
+      />
     </div>
   );
 }

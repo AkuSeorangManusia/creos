@@ -5,13 +5,14 @@ import TopPanel from "./TopPanel";
 import DesktopIcon from "./DesktopIcon";
 import Window from "./Window";
 import Widget from "./Widget";
-import { AboutMe, Projects, Contacts } from "./AppContent";
+import { AboutMe, Projects, Contacts, Guestbook } from "./AppContent";
 import { ClockWidget, DiscordPresenceWidget } from "./WidgetContent";
 
 const apps = [
   { id: "about", label: "About Me", icon: "/about-me-icon.png", content: AboutMe },
   { id: "projects", label: "Projects", icon: "/projects-icon.png", content: Projects },
   { id: "contacts", label: "Contacts", icon: "/contact-icon.png", content: Contacts },
+  { id: "guestbook", label: "Guestbook", icon: "/atabook.png", content: Guestbook },
 ];
 
 // Calculate positions for right side of screen (accounting for widget width + margin)
