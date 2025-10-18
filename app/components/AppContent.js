@@ -228,7 +228,7 @@ export function Guestbook() {
         src="https://andimsum.atabook.org"
         className="w-full h-full border-0"
         title="Guestbook"
-        style={{ minHeight: "700px" }}
+        style={{ minHeight: "500px" }}
       />
     </div>
   );
