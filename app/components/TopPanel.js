@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 
 export default function TopPanel({
   windows,
@@ -11,11 +12,27 @@ export default function TopPanel({
   onReorderWindows,
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState("All Apps");
   const [currentTime, setCurrentTime] = useState("");
   const [currentDate, setCurrentDate] = useState("");
   const [draggedIndex, setDraggedIndex] = useState(null);
   const [dragOverIndex, setDragOverIndex] = useState(null);
   const menuRef = useRef(null);
+
+  // App categories
+  const categories = [
+    { name: "All Apps", apps: ["About Me", "Contacts", "Guestbook", "Projects"] }, // Alphabetically sorted
+    { name: "Me", apps: ["About Me", "Projects", "Contacts"] },
+    { name: "Tools", apps: ["Guestbook"] },
+  ];
+
+  // App icons mapping
+  const appIcons = {
+    "About Me": "/about-me-icon.png",
+    "Projects": "/projects-icon.png",
+    "Contacts": "/contact-icon.png",
+    "Guestbook": "/atabook.png",
+  };
 
   useEffect(() => {
     // Update clock every second with WIB time (UTC+7)
@@ -56,6 +73,7 @@ export default function TopPanel({
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
         setMenuOpen(false);
+        setSelectedCategory("All Apps"); // Reset to default when closing
       }
     };
 
@@ -67,23 +85,14 @@ export default function TopPanel({
     };
   }, [menuOpen]);
 
-  const menuItems = [
-    { label: "About Me", type: "app" },
-    { label: "Projects", type: "app" },
-    { label: "Contacts", type: "app" },
-    { type: "separator" },
-    { label: "Reboot", type: "system" },
-  ];
-
-  const handleMenuItemClick = (item) => {
-    console.log("Menu item clicked:", item);
-    if (item.type === "app") {
-      onOpenApp(item.label);
-    } else if (item.label === "Reboot") {
-      // Reload page to simulate power off
-      window.location.reload();
-    }
+  const handleAppClick = (appLabel) => {
+    onOpenApp(appLabel);
     setMenuOpen(false);
+    setSelectedCategory("All Apps"); // Reset to default
+  };
+
+  const handleReboot = () => {
+    window.location.reload();
   };
 
   // Drag and drop handlers for window list
@@ -139,8 +148,10 @@ export default function TopPanel({
           >
           <button
             onClick={() => {
-              console.log("Menu button clicked, current state:", menuOpen);
               setMenuOpen(!menuOpen);
+              if (!menuOpen) {
+                setSelectedCategory("All Apps"); // Reset to default when opening
+              }
             }}
             className="bg-blue-600 hover:bg-blue-700 border-2 border-blue-400 text-white text-lg font-bold whitespace-nowrap shadow-md"
             style={{
@@ -154,22 +165,68 @@ export default function TopPanel({
 
           {menuOpen && (
             <div
-              className="absolute left-0 w-32 mt-2 bg-gray-800 border-2 border-gray-600 shadow-xl"
-              style={{ top: "100%", zIndex: 9999 }}
+              className="absolute left-0 mt-2 bg-gray-300 border-2 border-gray-400 shadow-xl flex"
+              style={{ 
+                top: "100%", 
+                zIndex: 9999,
+                width: "300px",
+                height: "400px",
+              }}
             >
-              {menuItems.map((item, index) =>
-                item.type === "separator" ? (
-                  <div key={index} className="border-t border-gray-600 my-1" />
-                ) : (
+              {/* Left side: Categories */}
+              <div className="bg-gray-400 border-r-2 border-gray-500 flex flex-col" style={{ width: "110px" }}>
+                {categories.map((category, index) => (
+                  <div key={category.name}>
+                    <button
+                      onClick={() => setSelectedCategory(category.name)}
+                      className={`w-full px-3 py-2 text-left text-sm font-semibold ${
+                        selectedCategory === category.name
+                          ? "bg-gray-600 text-white"
+                          : "text-black hover:bg-gray-500 hover:text-white"
+                      }`}
+                    >
+                      {category.name}
+                    </button>
+                    {index === 0 && (
+                      <div className="border-b-2 border-gray-500 mx-1" />
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              {/* Right side: Apps */}
+              <div className="flex-1 bg-gray-300 flex flex-col">
+                <div className="flex-1 overflow-y-auto p-2">
+                  {categories
+                    .find((cat) => cat.name === selectedCategory)
+                    ?.apps.map((appLabel) => (
+                      <button
+                        key={appLabel}
+                        onClick={() => handleAppClick(appLabel)}
+                        className="w-full flex items-center gap-2 px-2 py-2 text-left text-black hover:bg-gray-400 border border-transparent hover:border-gray-500 mb-1"
+                      >
+                        <Image
+                          src={appIcons[appLabel]}
+                          alt={appLabel}
+                          width={24}
+                          height={24}
+                          className="flex-shrink-0"
+                        />
+                        <span className="text-sm font-medium">{appLabel}</span>
+                      </button>
+                    ))}
+                </div>
+
+                {/* Reboot button at bottom right */}
+                <div className="border-t-2 border-gray-400 p-2 flex justify-end">
                   <button
-                    key={index}
-                    onClick={() => handleMenuItemClick(item)}
-                    className="w-full px-4 py-2 text-left text-white hover:bg-gray-700 text-lg block"
+                    onClick={handleReboot}
+                    className="text-sm text-black hover:underline font-semibold"
                   >
-                    {item.label}
+                    Reboot
                   </button>
-                )
-              )}
+                </div>
+              </div>
             </div>
           )}
         </div>

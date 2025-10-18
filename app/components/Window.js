@@ -38,7 +38,7 @@ export default function Window({
   }, [focused, onClose]);
 
   const handleMouseDown = (e) => {
-    e.stopPropagation(); // Prevent desktop click handler from unfocusing
+    e.stopPropagation(); // i hope this works
     onFocus();
   };
 
