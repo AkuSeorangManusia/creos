@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 
+// Clock Widget
 export function ClockWidget() {
   const [time, setTime] = useState("");
   const [date, setDate] = useState("");
@@ -48,6 +49,7 @@ export function ClockWidget() {
   );
 }
 
+// Discord Presence Widget
 export function DiscordPresenceWidget({ onHeightChange }) {
   const [presence, setPresence] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -56,7 +58,7 @@ export function DiscordPresenceWidget({ onHeightChange }) {
   
   const DISCORD_USER_ID = "687912745042968590";
 
-  // Update current time every second for smooth progress bar
+  // smooth progress bar 101
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTime(Date.now());
@@ -101,10 +103,10 @@ export function DiscordPresenceWidget({ onHeightChange }) {
     const mainActivity = activities.find(a => a.type !== 4);
     const isOnline = presence.discord_status !== "offline";
 
-    let requiredHeight = 60; // Base height for status
+    let requiredHeight = 50; // Base height for status
 
     if (spotify) {
-      requiredHeight += 100; // Spotify section with progress bar (increased from 70)
+      requiredHeight += 75; // Spotify section with progress bar (increased from 70)
     }
 
     if (mainActivity) {

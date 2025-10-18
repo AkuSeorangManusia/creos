@@ -84,26 +84,33 @@ export default function Desktop() {
       return;
     }
 
-    // Calculate center position
-    const centerX = (window.innerWidth - 600) / 2;
-    const centerY = (window.innerHeight - 400) / 2 + 20; // +20 to account for top panel
+    // Detect mobile
+    const isMobile = window.innerWidth < 768;
+    
+    // Calculate center position with mobile-friendly values
+    const windowWidth = isMobile ? Math.min(window.innerWidth - 20, 600) : 600;
+    const windowHeight = isMobile ? Math.min(window.innerHeight - 100, 400) : 400;
+    
+    const centerX = Math.max(10, (window.innerWidth - windowWidth) / 2);
+    const centerY = Math.max(60, (window.innerHeight - windowHeight) / 2 + 20); // +20 to account for top panel
     
     let newX, newY;
     
     // Check if we should cascade or center
     if (lastCenterPosition.current && 
         lastCenterPosition.current.x === centerX && 
-        lastCenterPosition.current.y === Math.max(60, centerY)) {
+        lastCenterPosition.current.y === centerY) {
       // Previous window is still at center position, cascade the new one
       cascadeCount.current += 1;
-      newX = centerX + (CASCADE_OFFSET * cascadeCount.current);
-      newY = Math.max(60, centerY) + (CASCADE_OFFSET * cascadeCount.current);
+      const offset = isMobile ? 15 : CASCADE_OFFSET; // Smaller offset on mobile
+      newX = Math.max(10, centerX + (offset * cascadeCount.current));
+      newY = Math.max(60, centerY + (offset * cascadeCount.current));
     } else {
       // Previous window was moved, center the new one and reset cascade
       newX = centerX;
-      newY = Math.max(60, centerY);
+      newY = centerY;
       cascadeCount.current = 0;
-      lastCenterPosition.current = { x: centerX, y: Math.max(60, centerY) };
+      lastCenterPosition.current = { x: centerX, y: centerY };
     }
 
     // Create unique window ID
