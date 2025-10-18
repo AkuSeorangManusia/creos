@@ -13,14 +13,15 @@ export default function Window({
   onMove,
   focused,
   initialPosition,
+  initialSize,
 }) {
   const MIN_WIDTH = 400;
   const MIN_HEIGHT = 300;
-  
+
   // Account for top panel (40px) and bottom panel on mobile (40px)
   const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
   const verticalOffset = isMobile ? 120 : 90; // Extra space on mobile for bottom panel
-  
+
   const MAX_WIDTH =
     typeof window !== "undefined" ? window.innerWidth - 100 : 1200;
   const MAX_HEIGHT =
@@ -47,8 +48,8 @@ export default function Window({
       default={{
         x: initialPosition?.x || 100,
         y: initialPosition?.y || 100,
-        width: 600,
-        height: 400,
+        width: initialSize?.width || 600,
+        height: initialSize?.height || 400,
       }}
       minWidth={MIN_WIDTH}
       minHeight={MIN_HEIGHT}

@@ -3,7 +3,13 @@
 import { useState } from "react";
 import Image from "next/image";
 
-export default function DesktopIcon({ icon, label, isSelected, onSelect, onDoubleClick }) {
+export default function DesktopIcon({
+  icon,
+  label,
+  isSelected,
+  onSelect,
+  onDoubleClick,
+}) {
   const [hovered, setHovered] = useState(false);
   const [clickTimeout, setClickTimeout] = useState(null);
 
@@ -39,12 +45,7 @@ export default function DesktopIcon({ icon, label, isSelected, onSelect, onDoubl
           hovered ? "drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]" : ""
         }`}
       >
-        <Image
-          src={icon}
-          alt={label}
-          fill
-          className="object-contain"
-        />
+        <Image src={icon} alt={label} fill className="object-contain" />
       </div>
       <div
         className="text-white text-center text-lg leading-none tracking-tight transition-all drop-shadow-[0_2px_3px_rgba(0,0,0,0.9)]"

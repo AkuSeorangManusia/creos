@@ -13,18 +13,18 @@ export function ClockWidget() {
       const wibTime = new Date(
         now.toLocaleString("en-US", { timeZone: "Asia/Jakarta" })
       );
-      
+
       const hours = wibTime.getHours().toString().padStart(2, "0");
       const minutes = wibTime.getMinutes().toString().padStart(2, "0");
       const seconds = wibTime.getSeconds().toString().padStart(2, "0");
-      
+
       setTime(`${hours}:${minutes}:${seconds}`);
-      
-      const options = { 
-        weekday: 'short',
-        year: 'numeric', 
-        month: 'short', 
-        day: 'numeric' 
+
+      const options = {
+        weekday: "short",
+        year: "numeric",
+        month: "short",
+        day: "numeric",
       };
       setDate(wibTime.toLocaleDateString("en-US", options));
     };
@@ -36,15 +36,14 @@ export function ClockWidget() {
 
   return (
     <div className="flex flex-col items-center justify-center h-full bg-black text-green-400">
-      <div className="text-4xl font-mono font-bold mb-2" style={{ fontFamily: 'monospace' }}>
+      <div
+        className="text-4xl font-mono font-bold mb-2"
+        style={{ fontFamily: "monospace" }}
+      >
         {time}
       </div>
-      <div className="text-sm font-mono">
-        {date}
-      </div>
-      <div className="text-xs mt-1 text-green-500">
-        WIB (UTC+7)
-      </div>
+      <div className="text-sm font-mono">{date}</div>
+      <div className="text-xs mt-1 text-green-500">WIB (UTC+7)</div>
     </div>
   );
 }
@@ -55,7 +54,7 @@ export function DiscordPresenceWidget({ onHeightChange }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [currentTime, setCurrentTime] = useState(Date.now());
-  
+
   const DISCORD_USER_ID = "687912745042968590";
 
   // smooth progress bar 101
@@ -69,9 +68,11 @@ export function DiscordPresenceWidget({ onHeightChange }) {
   useEffect(() => {
     const fetchPresence = async () => {
       try {
-        const response = await fetch(`https://api.lanyard.rest/v1/users/${DISCORD_USER_ID}`);
+        const response = await fetch(
+          `https://api.lanyard.rest/v1/users/${DISCORD_USER_ID}`
+        );
         const data = await response.json();
-        
+
         if (data.success) {
           setPresence(data.data);
           setError(false);
@@ -100,7 +101,7 @@ export function DiscordPresenceWidget({ onHeightChange }) {
 
     const spotify = presence.spotify;
     const activities = presence.activities || [];
-    const mainActivity = activities.find(a => a.type !== 4);
+    const mainActivity = activities.find((a) => a.type !== 4);
     const isOnline = presence.discord_status !== "offline";
 
     let requiredHeight = 50; // Base height for status
@@ -153,20 +154,22 @@ export function DiscordPresenceWidget({ onHeightChange }) {
     online: "bg-green-500",
     idle: "bg-yellow-500",
     dnd: "bg-red-500",
-    offline: "bg-gray-500"
+    offline: "bg-gray-500",
   };
 
   const spotify = presence.spotify;
   const activities = presence.activities || [];
   // Exclude custom status (type 4) and Spotify activities (name "Spotify")
-  const mainActivity = activities.find(a => a.type !== 4 && a.name !== "Spotify");
+  const mainActivity = activities.find(
+    (a) => a.type !== 4 && a.name !== "Spotify"
+  );
 
   // Helper function to format time in mm:ss
   const formatTime = (ms) => {
     const totalSeconds = Math.floor(ms / 1000);
     const minutes = Math.floor(totalSeconds / 60);
     const seconds = totalSeconds % 60;
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   };
 
   // Calculate Spotify progress
@@ -178,15 +181,24 @@ export function DiscordPresenceWidget({ onHeightChange }) {
     const end = spotify.timestamps.end;
     totalDuration = end - start;
     currentPosition = currentTime - start;
-    spotifyProgress = Math.min(Math.max((currentPosition / totalDuration) * 100, 0), 100);
+    spotifyProgress = Math.min(
+      Math.max((currentPosition / totalDuration) * 100, 0),
+      100
+    );
   }
 
   return (
     <div className="flex flex-col h-full text-black text-xs">
       {/* Status */}
       <div className="flex items-center gap-2 mb-2">
-        <div className={`w-3 h-3 rounded-full ${statusColors[presence.discord_status]}`}></div>
-        <span className="font-bold text-sm capitalize">{presence.discord_status}</span>
+        <div
+          className={`w-3 h-3 rounded-full ${
+            statusColors[presence.discord_status]
+          }`}
+        ></div>
+        <span className="font-bold text-sm capitalize">
+          {presence.discord_status}
+        </span>
       </div>
 
       {/* Spotify */}
@@ -204,9 +216,11 @@ export function DiscordPresenceWidget({ onHeightChange }) {
           {spotify.timestamps && (
             <div className="mt-2">
               <div className="flex items-center gap-1 text-xs text-gray-600 mb-1">
-                <span className="w-10 text-right">{formatTime(currentPosition)}</span>
+                <span className="w-10 text-right">
+                  {formatTime(currentPosition)}
+                </span>
                 <div className="flex-1 bg-gray-300 h-1 rounded-full overflow-hidden">
-                  <div 
+                  <div
                     className="bg-green-600 h-full transition-all duration-1000 ease-linear"
                     style={{ width: `${spotifyProgress}%` }}
                   ></div>
@@ -227,16 +241,16 @@ export function DiscordPresenceWidget({ onHeightChange }) {
           </div>
           <div className="font-bold truncate text-xs">{mainActivity.name}</div>
           {mainActivity.details && (
-            <div className="text-gray-600 truncate text-xs">{mainActivity.details}</div>
+            <div className="text-gray-600 truncate text-xs">
+              {mainActivity.details}
+            </div>
           )}
         </div>
       )}
 
       {/* If nothing is happening */}
       {!spotify && !mainActivity && isOnline && (
-        <div className="text-gray-500 text-center mt-4">
-          Just chilling...
-        </div>
+        <div className="text-gray-500 text-center mt-4">Just chilling...</div>
       )}
     </div>
   );

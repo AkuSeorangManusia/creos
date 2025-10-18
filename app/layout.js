@@ -18,9 +18,7 @@ export default function RootLayout({ children }) {
       <head>
         <script src="https://cdn.tailwindcss.com"></script>
       </head>
-      <body className={`${vt323.variable} antialiased`}>
-        {children}
-      </body>
+      <body className={`${vt323.variable} antialiased`}>{children}</body>
     </html>
   );
 }

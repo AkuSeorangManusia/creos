@@ -62,10 +62,9 @@ export default function Widget({
 
       {/* Content */}
       <div className="bg-white flex-1 p-2 overflow-auto">
-        {typeof children === 'function' 
+        {typeof children === "function"
           ? children({ onHeightChange: setCurrentHeight })
-          : children
-        }
+          : children}
       </div>
     </Rnd>
   );

@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 
 export function AboutMe() {
@@ -5,14 +7,14 @@ export function AboutMe() {
     <div className="p-2">
       <h2 className="text-3xl text-black font-bold mb-4">About Me</h2>
       <div className="mb-4">
-        <img 
-          src="/lilith.png" 
-          alt="my kisah" 
-          className="w-30 h-30 float-left mr-4 mb-2" 
+        <img
+          src="/lilith.png"
+          alt="my kisah"
+          className="w-30 h-30 float-left mr-4 mb-2"
         />
         <div className="text-black leading-none">
           <p>
-            Hello! I'm <strong>Muhammad Ahsan Sanadi</strong>, a rather tech
+            Hello! I'm <strong>Muhammad Ahsan Sanadi</strong>, somewhat a tech
             enthusiast from Yogyakarta, Indonesia.
           </p>
           <p className="mt-2">
@@ -230,6 +232,181 @@ export function Guestbook() {
         title="Guestbook"
         style={{ minHeight: "500px" }}
       />
+    </div>
+  );
+}
+
+export function Calculator() {
+  const [display, setDisplay] = useState("0");
+  const [equation, setEquation] = useState("");
+  const [isNewNumber, setIsNewNumber] = useState(true);
+
+  const handleNumber = (num) => {
+    if (isNewNumber) {
+      setDisplay(num);
+      setIsNewNumber(false);
+    } else {
+      setDisplay(display === "0" ? num : display + num);
+    }
+  };
+
+  const handleOperator = (op) => {
+    setEquation(equation + display + " " + op + " ");
+    setIsNewNumber(true);
+  };
+
+  const handleDecimal = () => {
+    if (!display.includes(".")) {
+      setDisplay(display + ".");
+      setIsNewNumber(false);
+    }
+  };
+
+  const handleClear = () => {
+    setDisplay("0");
+    setEquation("");
+    setIsNewNumber(true);
+  };
+
+  const handleBackspace = () => {
+    if (display.length > 1) {
+      setDisplay(display.slice(0, -1));
+    } else {
+      setDisplay("0");
+      setIsNewNumber(true);
+    }
+  };
+
+  const handleEquals = () => {
+    try {
+      const fullEquation = equation + display;
+      // Replace × and ÷ with * and / for evaluation
+      const evalString = fullEquation.replace(/×/g, "*").replace(/÷/g, "/");
+      const result = eval(evalString);
+      setDisplay(String(result));
+      setEquation(fullEquation + " =");
+      setIsNewNumber(true);
+    } catch (error) {
+      setDisplay("Error");
+      setEquation("");
+      setIsNewNumber(true);
+    }
+  };
+
+  const handleParenthesis = (paren) => {
+    if (isNewNumber) {
+      setDisplay(paren);
+      setIsNewNumber(false);
+    } else {
+      setDisplay(display + paren);
+    }
+  };
+
+  const Button = ({ label, onClick, className = "", span = false }) => (
+    <button
+      onClick={(e) => {
+        e.stopPropagation();
+        onClick();
+      }}
+      onMouseDown={(e) => {
+        e.stopPropagation();
+      }}
+      className={`bg-gray-100 hover:bg-gray-200 border-2 border-gray-400 text-black font-bold text-xl 
+        ${span ? "col-span-2" : ""} 
+        ${className}`}
+      style={{ height: "60px", cursor: "pointer" }}
+    >
+      {label}
+    </button>
+  );
+
+  return (
+    <div 
+      className="w-full h-full bg-white p-4 flex flex-col"
+      onMouseDown={(e) => e.stopPropagation()}
+      onClick={(e) => e.stopPropagation()}
+      style={{ cursor: "default" }}
+    >
+      {/* Display */}
+      <div className="bg-gray-50 border-2 border-gray-400 p-3 mb-4 text-right">
+        <div className="text-sm text-gray-600 h-5 overflow-hidden">
+          {equation}
+        </div>
+        <div className="text-3xl font-bold text-black mt-1 break-all">
+          {display}
+        </div>
+      </div>
+
+      {/* Button Grid */}
+      <div className="grid grid-cols-4 gap-2 flex-1">
+        {/* Row 1: Clear, Backspace, Parentheses, Divide */}
+        <Button
+          label="C"
+          onClick={handleClear}
+          className="bg-red-100 hover:bg-red-200"
+        />
+        <Button
+          label="⌫"
+          onClick={handleBackspace}
+          className="bg-red-100 hover:bg-red-200"
+        />
+        <Button label="(" onClick={() => handleParenthesis("(")} />
+        <Button label=")" onClick={() => handleParenthesis(")")} />
+
+        {/* Row 2: 7, 8, 9, Multiply */}
+        <Button label="7" onClick={() => handleNumber("7")} />
+        <Button label="8" onClick={() => handleNumber("8")} />
+        <Button label="9" onClick={() => handleNumber("9")} />
+        <Button
+          label="÷"
+          onClick={() => handleOperator("÷")}
+          className="bg-blue-100 hover:bg-blue-200"
+        />
+
+        {/* Row 3: 4, 5, 6, Multiply */}
+        <Button label="4" onClick={() => handleNumber("4")} />
+        <Button label="5" onClick={() => handleNumber("5")} />
+        <Button label="6" onClick={() => handleNumber("6")} />
+        <Button
+          label="×"
+          onClick={() => handleOperator("×")}
+          className="bg-blue-100 hover:bg-blue-200"
+        />
+
+        {/* Row 4: 1, 2, 3, Subtract */}
+        <Button label="1" onClick={() => handleNumber("1")} />
+        <Button label="2" onClick={() => handleNumber("2")} />
+        <Button label="3" onClick={() => handleNumber("3")} />
+        <Button
+          label="-"
+          onClick={() => handleOperator("-")}
+          className="bg-blue-100 hover:bg-blue-200"
+        />
+
+        {/* Row 5: 0 (span 2), Decimal, Add */}
+        <Button label="0" onClick={() => handleNumber("0")} span={true} />
+        <Button label="." onClick={handleDecimal} />
+        <Button
+          label="+"
+          onClick={() => handleOperator("+")}
+          className="bg-blue-100 hover:bg-blue-200"
+        />
+
+        {/* Row 6: Equals (span 4) */}
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            handleEquals();
+          }}
+          onMouseDown={(e) => {
+            e.stopPropagation();
+          }}
+          className="col-span-4 bg-green-100 hover:bg-green-200 border-2 border-gray-400 text-black font-bold text-xl"
+          style={{ height: "60px", cursor: "pointer" }}
+        >
+          =
+        </button>
+      </div>
     </div>
   );
 }

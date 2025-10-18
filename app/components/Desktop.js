@@ -5,14 +5,42 @@ import TopPanel from "./TopPanel";
 import DesktopIcon from "./DesktopIcon";
 import Window from "./Window";
 import Widget from "./Widget";
-import { AboutMe, Projects, Contacts, Guestbook } from "./AppContent";
+import { AboutMe, Projects, Contacts, Guestbook, Calculator } from "./AppContent";
 import { ClockWidget, DiscordPresenceWidget } from "./WidgetContent";
 
 const apps = [
-  { id: "about", label: "About Me", icon: "/about-me-icon.png", content: AboutMe },
-  { id: "projects", label: "Projects", icon: "/projects-icon.png", content: Projects },
-  { id: "contacts", label: "Contacts", icon: "/contact-icon.png", content: Contacts },
-  { id: "guestbook", label: "Guestbook", icon: "/atabook.png", content: Guestbook },
+  {
+    id: "about",
+    label: "About Me",
+    icon: "/about-me-icon.png",
+    content: AboutMe,
+  },
+  {
+    id: "projects",
+    label: "Projects",
+    icon: "/projects-icon.png",
+    content: Projects,
+  },
+  {
+    id: "contacts",
+    label: "Contacts",
+    icon: "/contact-icon.png",
+    content: Contacts,
+  },
+  {
+    id: "guestbook",
+    label: "Guestbook",
+    icon: "/atabook.png",
+    content: Guestbook,
+  },
+  {
+    id: "calculator",
+    label: "Calculator",
+    icon: "/calculator-icon.png",
+    content: Calculator,
+    showOnDesktop: false, // Don't show on desktop, only in menu
+    windowSize: { width: 300, height: 600 }, // Custom window size
+  },
 ];
 
 // Calculate positions for right side of screen (accounting for widget width + margin)
@@ -20,29 +48,35 @@ const getInitialWidgets = () => {
   const rightMargin = 20;
   const clockWidth = 200;
   const discordWidth = 200;
-  
+
   return [
-    { 
-      id: "clock", 
-      title: "Clock", 
-      content: ClockWidget, 
-      position: { 
-        x: typeof window !== 'undefined' ? window.innerWidth - clockWidth - rightMargin : window.innerWidth - 220,
-        y: 80 
-      }, 
-      width: clockWidth, 
+    {
+      id: "clock",
+      title: "Clock",
+      content: ClockWidget,
+      position: {
+        x:
+          typeof window !== "undefined"
+            ? window.innerWidth - clockWidth - rightMargin
+            : window.innerWidth - 220,
+        y: 80,
+      },
+      width: clockWidth,
       height: 150,
       dynamicHeight: false,
     },
-    { 
-      id: "discord", 
-      title: "Discord", 
-      content: DiscordPresenceWidget, 
-      position: { 
-        x: typeof window !== 'undefined' ? window.innerWidth - discordWidth - rightMargin : window.innerWidth - 220,
-        y: 250 
-      }, 
-      width: discordWidth, 
+    {
+      id: "discord",
+      title: "Discord",
+      content: DiscordPresenceWidget,
+      position: {
+        x:
+          typeof window !== "undefined"
+            ? window.innerWidth - discordWidth - rightMargin
+            : window.innerWidth - 220,
+        y: 250,
+      },
+      width: discordWidth,
       height: 180,
       dynamicHeight: true,
     },
@@ -66,114 +100,140 @@ export default function Desktop() {
     if (e.target === desktopRef.current) {
       // Deselect any selected icon when clicking on desktop
       setSelectedIconId(null);
-      
+
       // Unfocus all windows
-      setWindows(prev => prev.map(w => ({ ...w, focused: false })));
+      setWindows((prev) => prev.map((w) => ({ ...w, focused: false })));
     }
   };
 
-  const openApp = useCallback((appLabel) => {
-    const app = apps.find(a => a.label === appLabel);
-    if (!app) return;
+  const openApp = useCallback(
+    (appLabel) => {
+      const app = apps.find((a) => a.label === appLabel);
+      if (!app) return;
 
-    // Count how many windows of this app type are already open
-    const appWindowCount = windows.filter(w => w.appId === app.id).length;
-    
-    // Limit to 5 windows per app
-    if (appWindowCount >= 5) {
-      console.log(`Maximum of 5 ${app.label} windows reached`);
-      return;
-    }
+      // Count how many windows of this app type are already open
+      const appWindowCount = windows.filter((w) => w.appId === app.id).length;
 
-    // Detect mobile
-    const isMobile = window.innerWidth < 768;
-    
-    // Calculate center position with mobile-friendly values
-    const windowWidth = isMobile ? Math.min(window.innerWidth - 20, 600) : 600;
-    const windowHeight = isMobile ? Math.min(window.innerHeight - 100, 400) : 400;
-    
-    const centerX = Math.max(10, (window.innerWidth - windowWidth) / 2);
-    const centerY = Math.max(60, (window.innerHeight - windowHeight) / 2 + 20); // +20 to account for top panel
-    
-    let newX, newY;
-    
-    // Check if we should cascade or center
-    if (lastCenterPosition.current && 
-        lastCenterPosition.current.x === centerX && 
-        lastCenterPosition.current.y === centerY) {
-      // Previous window is still at center position, cascade the new one
-      cascadeCount.current += 1;
-      const offset = isMobile ? 15 : CASCADE_OFFSET; // Smaller offset on mobile
-      newX = Math.max(10, centerX + (offset * cascadeCount.current));
-      newY = Math.max(60, centerY + (offset * cascadeCount.current));
-    } else {
-      // Previous window was moved, center the new one and reset cascade
-      newX = centerX;
-      newY = centerY;
-      cascadeCount.current = 0;
-      lastCenterPosition.current = { x: centerX, y: centerY };
-    }
+      // Limit to 5 windows per app
+      if (appWindowCount >= 5) {
+        console.log(`Maximum of 5 ${app.label} windows reached`);
+        return;
+      }
 
-    // Create unique window ID
-    const uniqueWindowId = `${app.id}-${nextWindowId}`;
-    
-    // Add instance number to title if multiple windows of same app
-    const windowTitle = appWindowCount > 0 
-      ? `${app.label} (${appWindowCount + 1})`
-      : app.label;
+      // Detect mobile
+      const isMobile = window.innerWidth < 768;
 
-    const newWindow = {
-      id: uniqueWindowId,
-      appId: app.id,
-      title: windowTitle,
-      icon: app.icon,
-      content: app.content,
-      focused: true,
-      zIndex: nextZIndex,
-      position: { x: newX, y: newY },
-      hasMoved: false,
-    };
+      // Get custom window size or use defaults
+      const defaultWidth = 600;
+      const defaultHeight = 400;
+      const customWidth = app.windowSize?.width || defaultWidth;
+      const customHeight = app.windowSize?.height || defaultHeight;
 
-    setWindows(prev => [
-      ...prev.map(w => ({ ...w, focused: false })),
-      newWindow
-    ]);
-    setNextZIndex(nextZIndex + 1);
-    setNextWindowId(nextWindowId + 1);
-  }, [windows, nextZIndex, nextWindowId]);
+      // Calculate center position with mobile-friendly values
+      const windowWidth = isMobile
+        ? Math.min(window.innerWidth - 20, customWidth)
+        : customWidth;
+      const windowHeight = isMobile
+        ? Math.min(window.innerHeight - 100, customHeight)
+        : customHeight;
+
+      const centerX = Math.max(10, (window.innerWidth - windowWidth) / 2);
+      const centerY = Math.max(
+        60,
+        (window.innerHeight - windowHeight) / 2 + 20
+      ); // +20 to account for top panel
+
+      let newX, newY;
+
+      // Check if we should cascade or center
+      if (
+        lastCenterPosition.current &&
+        lastCenterPosition.current.x === centerX &&
+        lastCenterPosition.current.y === centerY
+      ) {
+        // Previous window is still at center position, cascade the new one
+        cascadeCount.current += 1;
+        const offset = isMobile ? 15 : CASCADE_OFFSET; // Smaller offset on mobile
+        newX = Math.max(10, centerX + offset * cascadeCount.current);
+        newY = Math.max(60, centerY + offset * cascadeCount.current);
+      } else {
+        // Previous window was moved, center the new one and reset cascade
+        newX = centerX;
+        newY = centerY;
+        cascadeCount.current = 0;
+        lastCenterPosition.current = { x: centerX, y: centerY };
+      }
+
+      // Create unique window ID
+      const uniqueWindowId = `${app.id}-${nextWindowId}`;
+
+      // Add instance number to title if multiple windows of same app
+      const windowTitle =
+        appWindowCount > 0 ? `${app.label} (${appWindowCount + 1})` : app.label;
+
+      const newWindow = {
+        id: uniqueWindowId,
+        appId: app.id,
+        title: windowTitle,
+        icon: app.icon,
+        content: app.content,
+        focused: true,
+        zIndex: nextZIndex,
+        position: { x: newX, y: newY },
+        size: { width: windowWidth, height: windowHeight },
+        hasMoved: false,
+      };
+
+      setWindows((prev) => [
+        ...prev.map((w) => ({ ...w, focused: false })),
+        newWindow,
+      ]);
+      setNextZIndex(nextZIndex + 1);
+      setNextWindowId(nextWindowId + 1);
+    },
+    [windows, nextZIndex, nextWindowId]
+  );
 
   const closeWindow = useCallback((windowId) => {
-    setWindows(prev => prev.filter(w => w.id !== windowId));
+    setWindows((prev) => prev.filter((w) => w.id !== windowId));
   }, []);
 
-  const focusWindow = useCallback((windowId) => {
-    setWindows(prev => prev.map(w => ({
-      ...w,
-      focused: w.id === windowId,
-      zIndex: w.id === windowId ? nextZIndex : w.zIndex,
-    })));
-    setNextZIndex(prev => prev + 1);
-  }, [nextZIndex]);
+  const focusWindow = useCallback(
+    (windowId) => {
+      setWindows((prev) =>
+        prev.map((w) => ({
+          ...w,
+          focused: w.id === windowId,
+          zIndex: w.id === windowId ? nextZIndex : w.zIndex,
+        }))
+      );
+      setNextZIndex((prev) => prev + 1);
+    },
+    [nextZIndex]
+  );
 
   const handleWindowMove = useCallback((windowId, newPosition) => {
-    setWindows(prev => prev.map(w => {
-      if (w.id === windowId) {
-        // Check if window actually moved from its original position
-        const moved = w.position.x !== newPosition.x || w.position.y !== newPosition.y;
-        
-        if (moved && !w.hasMoved) {
-          // Window was moved for the first time, update lastCenterPosition
-          lastCenterPosition.current = null;
+    setWindows((prev) =>
+      prev.map((w) => {
+        if (w.id === windowId) {
+          // Check if window actually moved from its original position
+          const moved =
+            w.position.x !== newPosition.x || w.position.y !== newPosition.y;
+
+          if (moved && !w.hasMoved) {
+            // Window was moved for the first time, update lastCenterPosition
+            lastCenterPosition.current = null;
+          }
+
+          return {
+            ...w,
+            position: newPosition,
+            hasMoved: moved || w.hasMoved,
+          };
         }
-        
-        return {
-          ...w,
-          position: newPosition,
-          hasMoved: moved || w.hasMoved,
-        };
-      }
-      return w;
-    }));
+        return w;
+      })
+    );
   }, []);
 
   const closeAllWindows = useCallback(() => {
@@ -187,14 +247,17 @@ export default function Desktop() {
   }, []);
 
   const closeWidget = useCallback((widgetId) => {
-    setWidgets(prev => prev.filter(w => w.id !== widgetId));
+    setWidgets((prev) => prev.filter((w) => w.id !== widgetId));
   }, []);
 
   return (
-    <div 
+    <div
       ref={desktopRef}
       className="fixed inset-0 overflow-hidden bg-cover bg-center bg-no-repeat pb-0 md:pb-0"
-      style={{ backgroundImage: "url('/pixel-art.jpg')", paddingBottom: 'env(safe-area-inset-bottom)' }}
+      style={{
+        backgroundImage: "url('/pixel-art.jpg')",
+        paddingBottom: "env(safe-area-inset-bottom)",
+      }}
       onClick={handleDesktopClick}
     >
       <TopPanel
@@ -207,21 +270,26 @@ export default function Desktop() {
       />
 
       {/* Desktop icons */}
-      <div className="absolute top-14 left-4 grid grid-flow-row auto-rows-max gap-2" style={{ gridTemplateColumns: "repeat(1, 112px)" }}>
-        {apps.map(app => (
-          <DesktopIcon
-            key={app.id}
-            icon={app.icon}
-            label={app.label}
-            isSelected={selectedIconId === app.id}
-            onSelect={() => setSelectedIconId(app.id)}
-            onDoubleClick={() => openApp(app.label)}
-          />
-        ))}
+      <div
+        className="absolute top-14 left-4 grid grid-flow-row auto-rows-max gap-2"
+        style={{ gridTemplateColumns: "repeat(1, 112px)" }}
+      >
+        {apps
+          .filter((app) => app.showOnDesktop !== false)
+          .map((app) => (
+            <DesktopIcon
+              key={app.id}
+              icon={app.icon}
+              label={app.label}
+              isSelected={selectedIconId === app.id}
+              onSelect={() => setSelectedIconId(app.id)}
+              onDoubleClick={() => openApp(app.label)}
+            />
+          ))}
       </div>
 
       {/* Windows */}
-      {windows.map(window => (
+      {windows.map((window) => (
         <Window
           key={window.id}
           id={window.id}
@@ -232,13 +300,14 @@ export default function Desktop() {
           onMove={(newPosition) => handleWindowMove(window.id, newPosition)}
           focused={window.focused}
           initialPosition={window.position}
+          initialSize={window.size}
         >
           <window.content />
         </Window>
       ))}
 
       {/* Widgets */}
-      {widgets.map(widget => (
+      {widgets.map((widget) => (
         <Widget
           key={widget.id}
           id={widget.id}
@@ -249,10 +318,13 @@ export default function Desktop() {
           height={widget.height}
           dynamicHeight={widget.dynamicHeight}
         >
-          {widget.dynamicHeight 
-            ? ({ onHeightChange }) => <widget.content onHeightChange={onHeightChange} />
-            : <widget.content />
-          }
+          {widget.dynamicHeight ? (
+            ({ onHeightChange }) => (
+              <widget.content onHeightChange={onHeightChange} />
+            )
+          ) : (
+            <widget.content />
+          )}
         </Widget>
       ))}
     </div>

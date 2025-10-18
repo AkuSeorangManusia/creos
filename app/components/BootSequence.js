@@ -65,19 +65,19 @@ export default function BootSequence({ onComplete }) {
       container.scrollTop = container.scrollHeight;
     };
 
-    container.addEventListener('wheel', preventScroll, { passive: false });
-    container.addEventListener('touchmove', preventScroll, { passive: false });
-    container.addEventListener('scroll', preventScroll);
+    container.addEventListener("wheel", preventScroll, { passive: false });
+    container.addEventListener("touchmove", preventScroll, { passive: false });
+    container.addEventListener("scroll", preventScroll);
 
     return () => {
-      container.removeEventListener('wheel', preventScroll);
-      container.removeEventListener('touchmove', preventScroll);
-      container.removeEventListener('scroll', preventScroll);
+      container.removeEventListener("wheel", preventScroll);
+      container.removeEventListener("touchmove", preventScroll);
+      container.removeEventListener("scroll", preventScroll);
     };
   }, []);
 
   return (
-    <div 
+    <div
       ref={containerRef}
       className="fixed inset-0 bg-black text-white p-8 font-mono overflow-y-auto cursor-hidden"
     >
