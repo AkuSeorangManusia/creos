@@ -32,6 +32,7 @@ const apps = [
     label: "Guestbook",
     icon: "/atabook.png",
     content: Guestbook,
+    windowSize: {width: 400, height: 550}
   },
   {
     id: "calculator",
