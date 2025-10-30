@@ -5,7 +5,7 @@ import TopPanel from "./TopPanel";
 import DesktopIcon from "./DesktopIcon";
 import Window from "./Window";
 import Widget from "./Widget";
-import { AboutMe, Projects, Contacts, Guestbook, Calculator } from "./AppContent";
+import { AboutMe, Projects, Contacts, Guestbook, Calculator, Blog, BlogArticle } from "./AppContent";
 import { ClockWidget, DiscordPresenceWidget } from "./WidgetContent";
 
 const apps = [
@@ -41,6 +41,13 @@ const apps = [
     content: Calculator,
     showOnDesktop: false, // Don't show on desktop, only in menu
     windowSize: { width: 300, height: 600 }, // Custom window size
+  },
+  {
+    id: "blog",
+    label: "Blog",
+    icon: "/blog-icon.png",
+    content: Blog,
+    windowSize: { width: 500, height: 600 },
   },
 ];
 
@@ -195,6 +202,51 @@ export default function Desktop() {
     [windows, nextZIndex, nextWindowId]
   );
 
+  const openArticle = useCallback(
+    (slug, articleTitle) => {
+      // Detect mobile
+      const isMobile = window.innerWidth < 768;
+
+      // Article window size
+      const articleWidth = isMobile
+        ? Math.min(window.innerWidth - 20, 600)
+        : 600;
+      const articleHeight = isMobile
+        ? Math.min(window.innerHeight - 100, 800)
+        : 800;
+
+      const centerX = Math.max(10, (window.innerWidth - articleWidth) / 2);
+      const centerY = Math.max(
+        60,
+        (window.innerHeight - articleHeight) / 2 + 20
+      );
+
+      // Create unique window ID for article
+      const uniqueWindowId = `article-${slug}-${nextWindowId}`;
+
+      const newWindow = {
+        id: uniqueWindowId,
+        appId: "article",
+        title: articleTitle || "Blog Article",
+        icon: "/blog-icon.png",
+        content: () => BlogArticle({ slug }),
+        focused: true,
+        zIndex: nextZIndex,
+        position: { x: centerX, y: centerY },
+        size: { width: articleWidth, height: articleHeight },
+        hasMoved: false,
+      };
+
+      setWindows((prev) => [
+        ...prev.map((w) => ({ ...w, focused: false })),
+        newWindow,
+      ]);
+      setNextZIndex(nextZIndex + 1);
+      setNextWindowId(nextWindowId + 1);
+    },
+    [nextZIndex, nextWindowId]
+  );
+
   const closeWindow = useCallback((windowId) => {
     setWindows((prev) => prev.filter((w) => w.id !== windowId));
   }, []);
@@ -303,7 +355,11 @@ export default function Desktop() {
           initialPosition={window.position}
           initialSize={window.size}
         >
-          <window.content />
+          {window.appId === "blog" ? (
+            <window.content onOpenArticle={openArticle} />
+          ) : (
+            <window.content />
+          )}
         </Window>
       ))}
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export function AboutMe() {
   return (
@@ -407,6 +407,204 @@ export function Calculator() {
           =
         </button>
       </div>
+    </div>
+  );
+}
+
+export function Blog({ onOpenArticle }) {
+  const [articles, setArticles] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchArticles = async () => {
+      try {
+        const response = await fetch("https://blog.andimsum.icu/api/articles");
+        if (!response.ok) {
+          throw new Error("Failed to fetch articles");
+        }
+        const data = await response.json();
+        setArticles(data);
+        setError(null);
+      } catch (err) {
+        console.error("Error fetching articles:", err);
+        setError("Failed to load articles. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchArticles();
+  }, []);
+
+  const handleArticleClick = (slug, title) => {
+    if (onOpenArticle) {
+      onOpenArticle(slug, title);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="w-full h-full flex items-center justify-center p-4">
+        <div className="text-center">
+          <div className="text-4xl mb-4">📚</div>
+          <div className="text-xl text-gray-600">Loading articles...</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="w-full h-full flex items-center justify-center p-4">
+        <div className="text-center">
+          <div className="text-4xl mb-4">❌</div>
+          <div className="text-xl text-red-600 mb-2">Error</div>
+          <div className="text-gray-600">{error}</div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="w-full h-full overflow-auto p-4">
+      <h2 className="text-3xl text-black font-bold mb-4">My Blog Articles</h2>
+      <div className="space-y-4">
+        {articles.map((article) => (
+          <div
+            key={article.slug}
+            onClick={() => handleArticleClick(article.slug, article.title)}
+            className="border-2 border-gray-400 p-4 hover:bg-gray-100 cursor-pointer transition-colors"
+            onMouseDown={(e) => e.stopPropagation()}
+          >
+            <h3 className="text-xl font-bold text-black mb-2">
+              {article.title}
+            </h3>
+            <div className="text-sm text-gray-600 mb-2">
+              {new Date(article.date).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
+              {article.author && ` • ${article.author}`}
+            </div>
+            {article.description && (
+              <p className="text-gray-700">{article.description}</p>
+            )}
+            {article.tags && article.tags.length > 0 && (
+              <div className="flex gap-2 mt-2 flex-wrap">
+                {article.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export function BlogArticle({ slug }) {
+  const [article, setArticle] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchArticle = async () => {
+      try {
+        const response = await fetch(
+          `https://blog.andimsum.icu/api/articles/${slug}`
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch article");
+        }
+        const data = await response.json();
+        setArticle(data);
+        setError(null);
+      } catch (err) {
+        console.error("Error fetching article:", err);
+        setError("Failed to load article. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchArticle();
+  }, [slug]);
+
+  if (loading) {
+    return (
+      <div className="w-full h-full flex items-center justify-center p-4">
+        <div className="text-center">
+          <div className="text-4xl mb-4">📖</div>
+          <div className="text-xl text-gray-600">Loading article...</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="w-full h-full flex items-center justify-center p-4">
+        <div className="text-center">
+          <div className="text-4xl mb-4">❌</div>
+          <div className="text-xl text-red-600 mb-2">Error</div>
+          <div className="text-gray-600">{error}</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!article) {
+    return (
+      <div className="w-full h-full flex items-center justify-center p-4">
+        <div className="text-center">
+          <div className="text-4xl mb-4">📄</div>
+          <div className="text-xl text-gray-600">Article not found</div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="w-full h-full overflow-auto p-6">
+      {/* Article Header */}
+      <div className="mb-6 pb-4 border-b-2 border-gray-300">
+        <h1 className="text-4xl font-bold text-black mb-3">{article.title}</h1>
+        <div className="text-gray-600">
+          <img src={article.thumbnail} />
+          {new Date(article.date).toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })}
+          {article.author && ` • By ${article.author}`}
+        </div>
+        {article.tags && article.tags.length > 0 && (
+          <div className="flex gap-2 mt-3 flex-wrap">
+            {article.tags.map((tag) => (
+              <span
+                key={tag}
+                className="text-sm bg-blue-100 text-blue-800 px-3 py-1 rounded"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Article Content */}
+      <div
+        className="article-content text-black"
+        dangerouslySetInnerHTML={{ __html: article.contentHtml }}
+      />
     </div>
   );
 }

@@ -23,9 +23,9 @@ export default function TopPanel({
   const categories = [
     {
       name: "All Apps",
-      apps: ["About Me", "Calculator", "Contacts", "Guestbook", "Projects"],
+      apps: ["About Me", "Blog", "Calculator", "Contacts", "Guestbook", "Projects"],
     }, // Alphabetically sorted
-    { name: "Me", apps: ["About Me", "Projects", "Contacts"] },
+    { name: "Me", apps: ["About Me", "Blog", "Projects", "Contacts"] },
     { name: "Tools", apps: ["Calculator", "Guestbook"] },
   ];
 
@@ -36,6 +36,7 @@ export default function TopPanel({
     Contacts: "/contact-icon.png",
     Guestbook: "/atabook.png",
     Calculator: "/calculator-icon.png",
+    Blog: "/blog-icon.png",
   };
 
   useEffect(() => {
