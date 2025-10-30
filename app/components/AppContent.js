@@ -321,7 +321,7 @@ export function Calculator() {
   );
 
   return (
-    <div 
+    <div
       className="w-full h-full bg-white p-4 flex flex-col"
       onMouseDown={(e) => e.stopPropagation()}
       onClick={(e) => e.stopPropagation()}
@@ -468,7 +468,14 @@ export function Blog({ onOpenArticle }) {
 
   return (
     <div className="w-full h-full overflow-auto p-4">
-      <h2 className="text-3xl text-black font-bold mb-4">My Blog Articles</h2>
+      <h2 className="text-3xl text-black font-bold mb-4">Blog</h2>
+      <p className="text-gray-600 mb-4 leading-none">
+        I write things sometimes. You can view them here or you can visit them
+        directly at{" "}
+        <a href="https://blog.andimsum.icu" className="text-blue-600 underline">
+          blog.andimsum.icu
+        </a>
+      </p>
       <div className="space-y-4">
         {articles.map((article) => (
           <div
