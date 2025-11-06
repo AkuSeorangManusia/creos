@@ -19,7 +19,7 @@ export function AboutMe() {
           </p>
           <p className="mt-2">
             I don't really have any particular interest in one specific field of
-            IT. If something interests me, I will probably try it at 2 AM.
+            IT. If something takes my interest, I will probably try it at 2 AM.
           </p>
         </div>
       </div>
