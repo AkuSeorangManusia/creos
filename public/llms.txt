@@ -1,0 +1,34 @@
+# Dim's Desktop - Interactive Retro Portfolio
+# https://andimsum.icu
+
+## About This Site
+This is the personal portfolio website of Muhammad Ahsan Sanadi (also known as "Andi" or "Dim"), 
+a tech enthusiast and aspiring DevOps engineer from Yogyakarta, Indonesia.
+
+The website is designed as an interactive retro operating system interface, 
+inspired by Windows 98 and Xfce.
+
+## Owner Information
+- Name: Muhammad Ahsan Sanadi
+- Location: Yogyakarta, Indonesia
+- Email: ahsansanadi167@gmail.com
+- GitHub: https://github.com/AkuSeorangManusia
+- LinkedIn: https://www.linkedin.com/in/andimsum/
+- Instagram: https://www.instagram.com/andimsum_
+- Blog: https://blog.andimsum.icu
+
+## Site Features
+- Interactive desktop interface with draggable windows
+- About Me section with personal information
+- Projects showcase
+- Contact information
+- Guestbook
+- Blog integration
+- Calculator tool
+- Discord presence widget
+
+## Technical Details
+- Built with Next.js
+- Uses React for interactive components
+- Styled with Tailwind CSS
+- VT323 retro font for authentic feel

@@ -1,0 +1,11 @@
+# robots.txt for andimsum.icu
+# Dim's Desktop - Interactive Retro Portfolio
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://andimsum.icu/sitemap.xml
+
+# Crawl delay (optional, be nice to the server)
+Crawl-delay: 1
