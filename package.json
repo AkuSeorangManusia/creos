@@ -10,7 +10,8 @@
     "format": "biome format --write"
   },
   "dependencies": {
-    "next": "^15.5.7",
+    "dotenv": "^17.2.3",
+    "next": "^15.5.9",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-rnd": "^10.5.2"

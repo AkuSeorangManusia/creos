@@ -6,7 +6,7 @@ import DesktopIcon from "./DesktopIcon";
 import Window from "./Window";
 import Widget from "./Widget";
 import { AboutMe, Projects, Contacts, Guestbook, Calculator, Blog, BlogArticle } from "./AppContent";
-import { ClockWidget, DiscordPresenceWidget } from "./WidgetContent";
+import { ClockWidget, DiscordPresenceWidget, SteamProfileWidget } from "./WidgetContent";
 
 const apps = [
   {
@@ -56,6 +56,7 @@ const getInitialWidgets = () => {
   const rightMargin = 20;
   const clockWidth = 200;
   const discordWidth = 200;
+  const steamWidth = 200;
 
   return [
     {
@@ -85,6 +86,21 @@ const getInitialWidgets = () => {
         y: 250,
       },
       width: discordWidth,
+      height: 180,
+      dynamicHeight: true,
+    },
+    {
+      id: "steam",
+      title: "Steam",
+      content: SteamProfileWidget,
+      position: {
+        x:
+          typeof window !== "undefined"
+            ? window.innerWidth - steamWidth - rightMargin
+            : window.innerWidth - 220,
+        y: 450,
+      },
+      width: steamWidth,
       height: 180,
       dynamicHeight: true,
     },
