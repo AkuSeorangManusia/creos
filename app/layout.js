@@ -23,14 +23,14 @@ export const metadata = {
   ],
   authors: [{ name: "Muhammad Ahsan Sanadi" }],
   creator: "Muhammad Ahsan Sanadi",
-  metadataBase: new URL("https://andimsum.icu"),
+  metadataBase: new URL("https://ahsansanadi.site"),
   alternates: {
     canonical: "/",
   },
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://andimsum.icu",
+    url: "https://ahsansanadi.site",
     siteName: "Dim's Desktop",
     title:
       "Muhammad Ahsan Sanadi | Dim's Desktop - Interactive Retro Portfolio",
@@ -72,24 +72,24 @@ const jsonLd = {
   "@graph": [
     {
       "@type": "WebSite",
-      "@id": "https://andimsum.icu/#website",
-      url: "https://andimsum.icu",
+      "@id": "https://ahsansanadi.site/#website",
+      url: "https://ahsansanadi.site",
       name: "Dim's Desktop",
       description:
         "Interactive retro OS-themed portfolio by Muhammad Ahsan Sanadi",
       publisher: {
-        "@id": "https://andimsum.icu/#person",
+        "@id": "https://ahsansanadi.site/#person",
       },
     },
     {
       "@type": "Person",
-      "@id": "https://andimsum.icu/#person",
+      "@id": "https://ahsansanadi.site/#person",
       name: "Muhammad Ahsan Sanadi",
       alternateName: "Dim",
       description:
         "Tech enthusiast and aspiring DevOps engineer from Yogyakarta, Indonesia",
-      url: "https://andimsum.icu",
-      image: "https://andimsum.icu/lilith.png",
+      url: "https://ahsansanadi.site",
+      image: "https://ahsansanadi.site/lilith.png",
       jobTitle: "Aspiring DevOps Engineer",
       address: {
         "@type": "PostalAddress",
@@ -106,14 +106,14 @@ const jsonLd = {
     },
     {
       "@type": "WebPage",
-      "@id": "https://andimsum.icu/#webpage",
-      url: "https://andimsum.icu",
+      "@id": "https://ahsansanadi.site/#webpage",
+      url: "https://ahsansanadi.site",
       name: "Dim's Desktop - Interactive Retro Portfolio",
       isPartOf: {
-        "@id": "https://andimsum.icu/#website",
+        "@id": "https://ahsansanadi.site/#website",
       },
       about: {
-        "@id": "https://andimsum.icu/#person",
+        "@id": "https://ahsansanadi.site/#person",
       },
       description:
         "An interactive retro OS-themed portfolio featuring projects, blog posts, and contact information in a retro operating system style.",
