@@ -419,7 +419,7 @@ export function Blog({ onOpenArticle }) {
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const response = await fetch("https://blog.andimsum.icu/api/articles");
+        const response = await fetch("https://blog.ahsansanadi.site/api/articles");
         if (!response.ok) {
           throw new Error("Failed to fetch articles");
         }
@@ -472,8 +472,8 @@ export function Blog({ onOpenArticle }) {
       <p className="text-gray-600 mb-4 leading-none">
         I write things sometimes. You can view them here or you can visit them
         directly at{" "}
-        <a href="https://blog.andimsum.icu" className="text-blue-600 underline">
-          blog.andimsum.icu
+        <a href="https://blog.ahsansanadi.site" className="text-blue-600 underline">
+          blog.ahsansanadi.site
         </a>
       </p>
       <div className="space-y-4">
@@ -526,7 +526,7 @@ export function BlogArticle({ slug }) {
     const fetchArticle = async () => {
       try {
         const response = await fetch(
-          `https://blog.andimsum.icu/api/articles/${slug}`
+          `https://blog.ahsansanadi.site/api/articles/${slug}`
         );
         if (!response.ok) {
           throw new Error("Failed to fetch article");
