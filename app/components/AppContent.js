@@ -56,13 +56,14 @@ export function Projects() {
       <div className="space-y-6 mt-5">
         <div
           className="border-l-4 border-blue-500 hover:border-4 pl-4"
-          onClick={() => window.open("https://handybox.andimsum.icu", "_blank")}
+          onClick={() => window.open("https://handybox.ahsansanadi.site", "_blank")}
           style={{ cursor: "pointer" }}
         >
           <h3 className="font-bold text-black text-xl">HandyBox</h3>
           <p className="text-gray-600 mt-1 text-lg">
             A website that serves various kind of handy calculating tools.
-            Deprecated, although I might revive it in the future.
+            Deprecated, although I might revive it in the future. <br/>
+            UPDATE: i revived it with vue yay
           </p>
         </div>
         <div
