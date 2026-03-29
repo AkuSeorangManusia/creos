@@ -15,10 +15,9 @@ export async function GET() {
     }
 
     try {
-        // Fetch player summary (includes online status and current game)
         const summaryResponse = await fetch(
             `https://api.steamapis.com/steam/profile/${STEAM_USER_ID}?api_key=${STEAM_API_KEY}`,
-            { next: { revalidate: 30 } }, // Cache for 30 seconds
+            { next: { revalidate: 30 } },
         );
 
         if (!summaryResponse.ok) {
@@ -34,7 +33,6 @@ export async function GET() {
             );
         }
 
-        // Fetch recently played games for additional context
         const recentGamesResponse = await fetch(
             `https://api.steamapis.com/steam/api/GetRecentlyPlayedGames?steamid=${STEAM_USER_ID}&count=3&key=${STEAM_API_KEY}`,
             { next: { revalidate: 60 } },
@@ -46,7 +44,6 @@ export async function GET() {
             recentGames = recentGamesData.response?.games || [];
         }
 
-        // Map onlineState string to personastate number
         const stateMap = {
             online: 1,
             offline: 0,
@@ -57,7 +54,6 @@ export async function GET() {
             "looking-to-play": 6,
         };
 
-        // Build avatar URL from hash
         const avatarUrl = player.avatarHash
             ? `https://avatars.steamstatic.com/${player.avatarHash}_full.jpg`
             : null;

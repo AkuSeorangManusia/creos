@@ -108,7 +108,7 @@ export function DiscordPresenceWidget({ onHeightChange }) {
         let requiredHeight = 50; // base height for status
 
         if (spotify) {
-            requiredHeight += 75; 
+            requiredHeight += 75;
         }
 
         if (mainActivity) {
@@ -305,191 +305,192 @@ export function DiscordPresenceWidget({ onHeightChange }) {
 }
 
 // Steam Profile Widget
-export function SteamProfileWidget({ onHeightChange }) {
-    const [profile, setProfile] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(false);
+// Disabled for now since the API is unreliable and often returns 500 errors.
+// export function SteamProfileWidget({ onHeightChange }) {
+//     const [profile, setProfile] = useState(null);
+//     const [loading, setLoading] = useState(true);
+//     const [error, setError] = useState(false);
 
-    useEffect(() => {
-        const fetchSteamProfile = async () => {
-            try {
-                const response = await fetch("/api/steam");
-                const data = await response.json();
+//     useEffect(() => {
+//         const fetchSteamProfile = async () => {
+//             try {
+//                 const response = await fetch("/api/steam");
+//                 const data = await response.json();
 
-                if (data.success) {
-                    setProfile(data.data);
-                    setError(false);
-                } else {
-                    setError(true);
-                }
-            } catch (err) {
-                console.error("Failed to fetch Steam profile:", err);
-                setError(true);
-            } finally {
-                setLoading(false);
-            }
-        };
+//                 if (data.success) {
+//                     setProfile(data.data);
+//                     setError(false);
+//                 } else {
+//                     setError(true);
+//                 }
+//             } catch (err) {
+//                 console.error("Failed to fetch Steam profile:", err);
+//                 setError(true);
+//             } finally {
+//                 setLoading(false);
+//             }
+//         };
 
-        fetchSteamProfile();
-        const interval = setInterval(fetchSteamProfile, 30000);
-        return () => clearInterval(interval);
-    }, []);
+//         fetchSteamProfile();
+//         const interval = setInterval(fetchSteamProfile, 30000);
+//         return () => clearInterval(interval);
+//     }, []);
 
-    // Calculate required height based on content
-    useEffect(() => {
-        if (!profile || loading || error) {
-            onHeightChange?.(180);
-            return;
-        }
+//     // Calculate required height based on content
+//     useEffect(() => {
+//         if (!profile || loading || error) {
+//             onHeightChange?.(180);
+//             return;
+//         }
 
-        let requiredHeight = 80;
+//         let requiredHeight = 80;
 
-        if (profile.gameextrainfo) {
-            requiredHeight += 50;
-        }
+//         if (profile.gameextrainfo) {
+//             requiredHeight += 50;
+//         }
 
-        if (profile.recentGames?.length > 0 && !profile.gameextrainfo) {
-            requiredHeight += 60;
-        }
+//         if (profile.recentGames?.length > 0 && !profile.gameextrainfo) {
+//             requiredHeight += 60;
+//         }
 
-        requiredHeight = Math.max(requiredHeight + 20, 180);
-        onHeightChange?.(requiredHeight);
-    }, [profile, loading, error, onHeightChange]);
+//         requiredHeight = Math.max(requiredHeight + 20, 180);
+//         onHeightChange?.(requiredHeight);
+//     }, [profile, loading, error, onHeightChange]);
 
-    if (loading) {
-        return (
-            <div className="flex items-center justify-center h-full text-gray-500">
-                <div className="text-center">
-                    <div className="text-2xl mb-2">⏳</div>
-                    <div className="text-sm">Loading...</div>
-                </div>
-            </div>
-        );
-    }
+//     if (loading) {
+//         return (
+//             <div className="flex items-center justify-center h-full text-gray-500">
+//                 <div className="text-center">
+//                     <div className="text-2xl mb-2">⏳</div>
+//                     <div className="text-sm">Loading...</div>
+//                 </div>
+//             </div>
+//         );
+//     }
 
-    if (error || !profile) {
-        return (
-            <div className="flex items-center justify-center h-full text-gray-500">
-                <div className="text-center">
-                    <div className="text-2xl mb-2">❌</div>
-                    <div className="text-xs">Unable to load</div>
-                </div>
-            </div>
-        );
-    }
+//     if (error || !profile) {
+//         return (
+//             <div className="flex items-center justify-center h-full text-gray-500">
+//                 <div className="text-center">
+//                     <div className="text-2xl mb-2">❌</div>
+//                     <div className="text-xs">Unable to load</div>
+//                 </div>
+//             </div>
+//         );
+//     }
 
-    // Steam persona states
-    const statusInfo = {
-        0: { label: "Offline", color: "bg-gray-500" },
-        1: { label: "Online", color: "bg-green-500" },
-        2: { label: "Busy", color: "bg-red-500" },
-        3: { label: "Away", color: "bg-yellow-500" },
-        4: { label: "Snooze", color: "bg-yellow-600" },
-        5: { label: "Looking to Trade", color: "bg-blue-500" },
-        6: { label: "Looking to Play", color: "bg-blue-400" },
-    };
+//     // Steam persona states
+//     const statusInfo = {
+//         0: { label: "Offline", color: "bg-gray-500" },
+//         1: { label: "Online", color: "bg-green-500" },
+//         2: { label: "Busy", color: "bg-red-500" },
+//         3: { label: "Away", color: "bg-yellow-500" },
+//         4: { label: "Snooze", color: "bg-yellow-600" },
+//         5: { label: "Looking to Trade", color: "bg-blue-500" },
+//         6: { label: "Looking to Play", color: "bg-blue-400" },
+//     };
 
-    const status = statusInfo[profile.personastate] || statusInfo[0];
-    const isPlaying = !!profile.gameextrainfo;
+//     const status = statusInfo[profile.personastate] || statusInfo[0];
+//     const isPlaying = !!profile.gameextrainfo;
 
-    // Format playtime
-    const formatPlaytime = (minutes) => {
-        const hours = Math.floor(minutes / 60);
-        if (hours < 1) return `${minutes}m`;
-        return `${hours}h`;
-    };
+//     // Format playtime
+//     const formatPlaytime = (minutes) => {
+//         const hours = Math.floor(minutes / 60);
+//         if (hours < 1) return `${minutes}m`;
+//         return `${hours}h`;
+//     };
 
-    return (
-        <div className="flex flex-col h-full text-black text-xs">
-            {/* Profile Header */}
-            <div className="flex items-center gap-3 mb-3">
-                <div className="relative">
-                    <Image
-                        src={profile.avatar}
-                        alt={profile.personaname}
-                        width={48}
-                        height={48}
-                        unoptimized
-                        className="w-12 h-12 rounded-lg border-2 border-gray-300"
-                    />
-                    <div
-                        className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white ${status.color}`}
-                    ></div>
-                </div>
-                <div className="flex-1 min-w-0">
-                    <div className="font-bold text-sm truncate">
-                        {profile.personaname}
-                    </div>
-                    <div className="flex items-center gap-1">
-                        <span
-                            className={`w-2 h-2 rounded-full ${status.color}`}
-                        ></span>
-                        <span className="text-gray-600 capitalize">
-                            {status.label}
-                        </span>
-                    </div>
-                </div>
-                {/* Steam Logo */}
-                <div className="text-gray-400">
-                    <svg
-                        className="w-6 h-6"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                        role="img"
-                        aria-label="Steam"
-                    >
-                        <title>Steam</title>
-                        <path d="M12 2C6.48 2 2 6.48 2 12c0 4.84 3.44 8.87 8 9.8v-2.04c-3.45-.89-6-4.01-6-7.76 0-4.42 3.58-8 8-8s8 3.58 8 8c0 .71-.09 1.4-.27 2.05l1.73 1.73C21.8 14.72 22 13.39 22 12c0-5.52-4.48-10-10-10zm-1.5 11.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm5 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z" />
-                    </svg>
-                </div>
-            </div>
+//     return (
+//         <div className="flex flex-col h-full text-black text-xs">
+//             {/* Profile Header */}
+//             <div className="flex items-center gap-3 mb-3">
+//                 <div className="relative">
+//                     <Image
+//                         src={profile.avatar}
+//                         alt={profile.personaname}
+//                         width={48}
+//                         height={48}
+//                         unoptimized
+//                         className="w-12 h-12 rounded-lg border-2 border-gray-300"
+//                     />
+//                     <div
+//                         className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white ${status.color}`}
+//                     ></div>
+//                 </div>
+//                 <div className="flex-1 min-w-0">
+//                     <div className="font-bold text-sm truncate">
+//                         {profile.personaname}
+//                     </div>
+//                     <div className="flex items-center gap-1">
+//                         <span
+//                             className={`w-2 h-2 rounded-full ${status.color}`}
+//                         ></span>
+//                         <span className="text-gray-600 capitalize">
+//                             {status.label}
+//                         </span>
+//                     </div>
+//                 </div>
+//                 {/* Steam Logo */}
+//                 <div className="text-gray-400">
+//                     <svg
+//                         className="w-6 h-6"
+//                         viewBox="0 0 24 24"
+//                         fill="currentColor"
+//                         role="img"
+//                         aria-label="Steam"
+//                     >
+//                         <title>Steam</title>
+//                         <path d="M12 2C6.48 2 2 6.48 2 12c0 4.84 3.44 8.87 8 9.8v-2.04c-3.45-.89-6-4.01-6-7.76 0-4.42 3.58-8 8-8s8 3.58 8 8c0 .71-.09 1.4-.27 2.05l1.73 1.73C21.8 14.72 22 13.39 22 12c0-5.52-4.48-10-10-10zm-1.5 11.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm5 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z" />
+//                     </svg>
+//                 </div>
+//             </div>
 
-            {/* Currently Playing */}
-            {isPlaying && (
-                <div className="mb-2 pb-2 border-b border-gray-300">
-                    <div className="flex items-center gap-1 mb-1">
-                        <span className="text-green-600 font-bold">🎮</span>
-                        <span className="font-semibold text-green-700">
-                            Now Playing
-                        </span>
-                    </div>
-                    <div className="font-bold truncate">
-                        {profile.gameextrainfo}
-                    </div>
-                </div>
-            )}
+//             {/* Currently Playing */}
+//             {isPlaying && (
+//                 <div className="mb-2 pb-2 border-b border-gray-300">
+//                     <div className="flex items-center gap-1 mb-1">
+//                         <span className="text-green-600 font-bold">🎮</span>
+//                         <span className="font-semibold text-green-700">
+//                             Now Playing
+//                         </span>
+//                     </div>
+//                     <div className="font-bold truncate">
+//                         {profile.gameextrainfo}
+//                     </div>
+//                 </div>
+//             )}
 
-            {/* Recent Games */}
-            {!isPlaying && profile.recentGames?.length > 0 && (
-                <div className="mb-2">
-                    <div className="flex items-center gap-1 mb-2">
-                        <span className="text-blue-600 font-bold">📊</span>
-                        <span className="font-semibold">Recently Played</span>
-                    </div>
-                    <div className="space-y-1">
-                        {profile.recentGames.slice(0, 3).map((game) => (
-                            <div
-                                key={game.appid}
-                                className="flex items-center justify-between text-xs"
-                            >
-                                <span className="truncate flex-1">
-                                    {game.name}
-                                </span>
-                                <span className="text-gray-500 ml-2">
-                                    {formatPlaytime(game.playtime_2weeks)} (2w)
-                                </span>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            )}
+//             {/* Recent Games */}
+//             {!isPlaying && profile.recentGames?.length > 0 && (
+//                 <div className="mb-2">
+//                     <div className="flex items-center gap-1 mb-2">
+//                         <span className="text-blue-600 font-bold">📊</span>
+//                         <span className="font-semibold">Recently Played</span>
+//                     </div>
+//                     <div className="space-y-1">
+//                         {profile.recentGames.slice(0, 3).map((game) => (
+//                             <div
+//                                 key={game.appid}
+//                                 className="flex items-center justify-between text-xs"
+//                             >
+//                                 <span className="truncate flex-1">
+//                                     {game.name}
+//                                 </span>
+//                                 <span className="text-gray-500 ml-2">
+//                                     {formatPlaytime(game.playtime_2weeks)} (2w)
+//                                 </span>
+//                             </div>
+//                         ))}
+//                     </div>
+//                 </div>
+//             )}
 
-            {profile.personastate === 0 &&
-                profile.recentGames?.length === 0 && (
-                    <div className="text-gray-500 text-center mt-4">
-                        Currently offline
-                    </div>
-                )}
-        </div>
-    );
-}
+//             {profile.personastate === 0 &&
+//                 profile.recentGames?.length === 0 && (
+//                     <div className="text-gray-500 text-center mt-4">
+//                         Currently offline
+//                     </div>
+//                 )}
+//         </div>
+//     );
+// }
