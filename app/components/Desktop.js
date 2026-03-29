@@ -16,7 +16,7 @@ import Widget from "./Widget";
 import {
     ClockWidget,
     DiscordPresenceWidget,
-    SteamProfileWidget,
+    // SteamProfileWidget,
 } from "./WidgetContent";
 import Window from "./Window";
 
@@ -69,7 +69,7 @@ const getInitialWidgets = () => {
     const rightMargin = 20;
     const clockWidth = 200;
     const discordWidth = 200;
-    const steamWidth = 200;
+    // const steamWidth = 200;
 
     return [
         {
@@ -102,21 +102,21 @@ const getInitialWidgets = () => {
             height: 180,
             dynamicHeight: true,
         },
-        {
-            id: "steam",
-            title: "Steam",
-            content: SteamProfileWidget,
-            position: {
-                x:
-                    typeof window !== "undefined"
-                        ? window.innerWidth - steamWidth - rightMargin
-                        : window.innerWidth - 220,
-                y: 450,
-            },
-            width: steamWidth,
-            height: 180,
-            dynamicHeight: true,
-        },
+        // {
+        //     id: "steam",
+        //     title: "Steam",
+        //     content: SteamProfileWidget,
+        //     position: {
+        //         x:
+        //             typeof window !== "undefined"
+        //                 ? window.innerWidth - steamWidth - rightMargin
+        //                 : window.innerWidth - 220,
+        //         y: 450,
+        //     },
+        //     width: steamWidth,
+        //     height: 180,
+        //     dynamicHeight: true,
+        // },
     ];
 };
 
