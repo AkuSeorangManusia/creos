@@ -11,6 +11,7 @@ import {
     Projects,
 } from "./AppContent";
 import DesktopIcon from "./DesktopIcon";
+import Tetris from "./Tetris";
 import TopPanel from "./TopPanel";
 import Widget from "./Widget";
 import {
@@ -55,6 +56,20 @@ const apps = [
         windowSize: { width: 300, height: 600 },
     },
     {
+        id: "tetris",
+        label: "Tetris",
+        icon: "/tetris-icon.png",
+        content: Tetris,
+        windowSize: { width: 500, height: 640 },
+    },
+    {
+        id: "calculator",
+        label: "Calculator",
+        icon: "/calculator-icon.png",
+        content: Calculator,
+        windowSize: { width: 300, height: 600 },
+    },
+    {
         id: "blog",
         label: "Blog",
         icon: "/blog-icon.png",
@@ -69,7 +84,10 @@ const getInitialWidgets = () => {
     const rightMargin = 20;
     const clockWidth = 200;
     const discordWidth = 200;
-    // const steamWidth = 200;
+
+    const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+    const clockY = isMobile ? 350 : 80;
+    const discordY = isMobile ? 520 : 250;
 
     return [
         {
@@ -81,7 +99,7 @@ const getInitialWidgets = () => {
                     typeof window !== "undefined"
                         ? window.innerWidth - clockWidth - rightMargin
                         : window.innerWidth - 220,
-                y: 80,
+                y: clockY,
             },
             width: clockWidth,
             height: 150,
@@ -96,27 +114,12 @@ const getInitialWidgets = () => {
                     typeof window !== "undefined"
                         ? window.innerWidth - discordWidth - rightMargin
                         : window.innerWidth - 220,
-                y: 250,
+                y: discordY,
             },
             width: discordWidth,
             height: 180,
             dynamicHeight: true,
         },
-        // {
-        //     id: "steam",
-        //     title: "Steam",
-        //     content: SteamProfileWidget,
-        //     position: {
-        //         x:
-        //             typeof window !== "undefined"
-        //                 ? window.innerWidth - steamWidth - rightMargin
-        //                 : window.innerWidth - 220,
-        //         y: 450,
-        //     },
-        //     width: steamWidth,
-        //     height: 180,
-        //     dynamicHeight: true,
-        // },
     ];
 };
 
@@ -128,6 +131,7 @@ export default function Desktop() {
     const [nextZIndex, setNextZIndex] = useState(1);
     const [selectedIconId, setSelectedIconId] = useState(null);
     const [nextWindowId, setNextWindowId] = useState(1);
+    const [isMobile, setIsMobile] = useState(false);
     const lastCenterPosition = useRef(null);
     const cascadeCount = useRef(0);
     const desktopRef = useRef(null);
@@ -152,6 +156,13 @@ export default function Desktop() {
             desktopElement.removeEventListener("mousedown", handleDesktopClick);
         };
     }, [handleDesktopClick]);
+
+    useEffect(() => {
+        const check = () => setIsMobile(window.innerWidth < 768);
+        check();
+        window.addEventListener("resize", check);
+        return () => window.removeEventListener("resize", check);
+    }, []);
 
     const openApp = useCallback(
         (appLabel) => {
@@ -370,8 +381,18 @@ export default function Desktop() {
 
             {/* Desktop icons */}
             <div
-                className="absolute top-14 left-4 grid grid-flow-row auto-rows-max gap-2"
-                style={{ gridTemplateColumns: "repeat(1, 112px)" }}
+                className={
+                    isMobile
+                        ? "absolute top-14 left-4 flex flex-col flex-wrap content-start items-start gap-2"
+                        : "absolute top-14 left-4 grid grid-flow-row auto-rows-max gap-2"
+                }
+                style={{
+                    width: isMobile ? "calc(100vw - 2rem)" : "112px",
+                    height: isMobile ? "calc(100dvh - 8.5rem)" : "auto",
+                    gridTemplateColumns: isMobile
+                        ? undefined
+                        : "repeat(1, 112px)",
+                }}
             >
                 {apps
                     .filter((app) => app.showOnDesktop !== false)

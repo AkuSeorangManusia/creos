@@ -29,10 +29,21 @@ export default function TopPanel({
                 "Contacts",
                 "Guestbook",
                 "Projects",
+                "Tetris",
             ],
         },
-        { name: "Me", apps: ["About Me", "Blog", "Projects", "Contacts"] },
-        { name: "Tools", apps: ["Calculator", "Guestbook"] },
+        {
+            name: "Me",
+            apps: ["About Me", "Blog", "Projects", "Contacts"],
+        },
+        {
+            name: "Tools",
+            apps: ["Calculator", "Guestbook"],
+        },
+        {
+            name: "Fun",
+            apps: ["Tetris"],
+        },
     ];
 
     const appIcons = {
@@ -42,6 +53,7 @@ export default function TopPanel({
         Guestbook: "/atabook.png",
         Calculator: "/calculator-icon.png",
         Blog: "/blog-icon.png",
+        Tetris: "/tetris-icon.png",
     };
 
     useEffect(() => {
