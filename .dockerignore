@@ -1,0 +1,17 @@
+.git
+.next
+node_modules
+.env*
+
+Dockerfile
+README.md
+*.log
+*.md
+
+coverage
+out
+build
+.vercel
+*.tsbuildinfo
+next-env.d.ts
+.DS_Store
