@@ -10,10 +10,6 @@ pipeline {
         APP_DIR      = "/opt/jenkins/andimsum-portfolio"
     }
 
-    triggers {
-        pollSCM(false)
-    }
-
     stages {
         stage('Deploy via SSH') {
             steps {
