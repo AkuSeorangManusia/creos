@@ -32,13 +32,13 @@ WORKDIR /app
 RUN addgroup -S nodejs && adduser -S nextjs -G nodejs
 
 COPY package.json package-lock.json ./
-RUN npm ci --omit=dev && npm cache clean --force
 
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/.next/standalone ./
 
 USER nextjs
 
 EXPOSE 3000
 
-CMD ["npm", "start"]
+CMD ["node", "server.js"]
