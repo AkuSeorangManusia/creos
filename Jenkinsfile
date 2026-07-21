@@ -4,7 +4,7 @@ pipeline {
     environment {
         IMAGE_NAME   = 'andimsum-portfolio'
         CONTAINER    = 'andimsum-portfolio'
-        DEPLOY_HOST  = '192.168.18.15'
+        DEPLOY_HOST  = '192.168.18.8'
         DEPLOY_USER  = 'root'
         REPO_URL     = 'https://github.com/AkuSeorangManusia/creos.git'
         APP_DIR      = "/opt/jenkins/andimsum-portfolio"
