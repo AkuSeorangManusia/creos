@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run lint
+
+      - run: npm run build
+
+      - name: Trigger Jenkins Pipeline
+        if: github.ref == 'refs/heads/main' && success()
+        run: |
+          curl -X POST \
+            "https://jenkins.ahsansanadi.site/job/andimsum-portfolio/build?token=${{ secrets.JENKINS_TOKEN }}"
