@@ -18,7 +18,7 @@ jobs:
           node-version: 20
           cache: npm
 
-      - run: npm ci
+      - run: npm i
 
       - run: npm run lint
 
@@ -27,5 +27,7 @@ jobs:
       - name: Trigger Jenkins Pipeline
         if: github.ref == 'refs/heads/main' && success()
         run: |
-          curl -X POST \
+          curl 
+            --user "${{ secrets.JENKINS_USER }}:${{ secrets.JENKINS_API_TOKEN }}"
+            -X POST \
             "https://jenkins.ahsansanadi.site/job/andimsum-portfolio/build?token=${{ secrets.JENKINS_TOKEN }}"

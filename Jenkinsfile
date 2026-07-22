@@ -27,7 +27,7 @@ pipeline {
                             fi
                             cd ${APP_DIR}
                             git pull origin main
-                            /root/.nvm/versions/node/v${NODE_VERSION}/bin/npm ci
+                            /root/.nvm/versions/node/v${NODE_VERSION}/bin/npm i
                             /root/.nvm/versions/node/v${NODE_VERSION}/bin/npm run build
                             cp -n .env.production .env.local 2>/dev/null || true
                             /root/.nvm/versions/node/v${NODE_VERSION}/bin/pm2 startOrReload ecosystem.config.js --update-env
