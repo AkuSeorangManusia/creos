@@ -6,6 +6,7 @@ pipeline {
         DEPLOY_USER = 'root'
         REPO_URL    = 'https://github.com/AkuSeorangManusia/creos.git'
         APP_DIR     = '/opt/jenkins/andimsum-portfolio'
+        NODE_VERSION    = '26.5.0'
     }
 
     stages {
@@ -26,10 +27,10 @@ pipeline {
                             fi
                             cd ${APP_DIR}
                             git pull origin main
-                            npm ci
-                            npm run build
+                            /root/.nvm/versions/node/v${NODE_VERSION}/bin/npm ci
+                            /root/.nvm/versions/node/v${NODE_VERSION}/bin/npm run build
                             cp -n .env.production .env.local 2>/dev/null || true
-                            pm2 startOrReload ecosystem.config.js --update-env
+                            /root/.nvm/versions/node/v${NODE_VERSION}/bin/pm2 startOrReload ecosystem.config.js --update-env
                         '
                     """
                 }
