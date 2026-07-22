@@ -7,7 +7,7 @@ pipeline {
         REPO_URL    = 'https://github.com/AkuSeorangManusia/creos.git'
         APP_DIR     = '/opt/jenkins/andimsum-portfolio'
     }
-    
+
     stages {
         stage('Add Host Key') {
             steps {
