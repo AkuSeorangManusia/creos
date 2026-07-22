@@ -8,10 +8,6 @@ pipeline {
         APP_DIR     = '/opt/jenkins/andimsum-portfolio'
     }
 
-    triggers {
-        pollSCM(false)
-    }
-
     stages {
         stage('Add Host Key') {
             steps {
