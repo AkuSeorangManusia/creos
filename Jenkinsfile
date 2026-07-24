@@ -42,7 +42,13 @@ pipeline {
         success {
             googlechatnotification(
                 url: 'id:google-chat-webhook',
-                message: 'Deployment successful!',
+                message: """\
+✅ Successful Deployment
+
+Job: ${env.JOB_NAME}
+Build: #${env.BUILD_NUMBER}
+URL: ${env.BUILD_URL}
+""",
                 sameThreadNotification: true,
                 threadKey: 'deployment-notification'
             )
@@ -51,7 +57,13 @@ pipeline {
         failure {
             googlechatnotification(
                 url: 'id:google-chat-webhook',
-                message: 'Pipeline failed.',
+                message: """\
+❌ Failed Deployment
+
+Job: ${env.JOB_NAME}
+Build: #${env.BUILD_NUMBER}
+URL: ${env.BUILD_URL}
+""",
                 sameThreadNotification: true,
                 threadKey: 'deployment-notification'
             )
