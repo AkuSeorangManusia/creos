@@ -39,7 +39,22 @@ pipeline {
     }
 
     post {
-        success { echo 'Deployment successful!' }
-        failure { echo 'Pipeline failed.' }
+        success {
+            googlechatnotification(
+                url: 'id:google-chat-webhook',
+                message: 'Deployment successful!',
+                sameThreadNotification: true,
+                threadKey: 'deployment-notification'
+            )
+        }
+
+        failure {
+            googlechatnotification(
+                url: 'id:google-chat-webhook',
+                message: 'Pipeline failed.',
+                sameThreadNotification: true,
+                threadKey: 'deployment-notification'
+            )
+        }
     }
 }
