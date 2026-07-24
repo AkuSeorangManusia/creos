@@ -47,10 +47,9 @@ pipeline {
 
 Job: ${env.JOB_NAME}
 Build: #${env.BUILD_NUMBER}
+Status: ${currentBuild.currentResult}
 URL: ${env.BUILD_URL}
-""",
-                sameThreadNotification: true,
-                threadKey: 'deployment-notification'
+"""
             )
         }
 
@@ -62,10 +61,9 @@ URL: ${env.BUILD_URL}
 
 Job: ${env.JOB_NAME}
 Build: #${env.BUILD_NUMBER}
+Status: ${currentBuild.currentResult}
 URL: ${env.BUILD_URL}
-""",
-                sameThreadNotification: true,
-                threadKey: 'deployment-notification'
+"""
             )
         }
     }
