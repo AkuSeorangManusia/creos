@@ -16,6 +16,14 @@ pipeline {
             }
         }
 
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('sq-ahsan') {
+                    sh 'sonar-scanner'
+                }
+            }
+        }
+
         stage('Deploy via SSH') {
             steps {
                 sshagent(['deploy-server-key']) {
