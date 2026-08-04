@@ -644,7 +644,7 @@ export function Blog({ onOpenArticle }) {
         const fetchArticles = async () => {
             try {
                 const response = await fetch(
-                    "https://blog.ahsansanadi.site/api/articles",
+                    `${process.env.BLOG_URL || "https://blog.ahsansanadi.site/api/articles"}`,
                 );
                 if (!response.ok) {
                     throw new Error("Failed to fetch articles");
