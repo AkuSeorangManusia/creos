@@ -640,12 +640,11 @@ export function Blog({ onOpenArticle }) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    // fetch articles via the portfolio's server-side proxy
     useEffect(() => {
         const fetchArticles = async () => {
             try {
-                const response = await fetch(
-                    `${process.env.BLOG_URL || "https://blog.ahsansanadi.site/api/articles"}`,
-                );
+                const response = await fetch("/api/blog/articles");
                 if (!response.ok) {
                     throw new Error("Failed to fetch articles");
                 }
@@ -765,7 +764,7 @@ export function BlogArticle({ slug }) {
         const fetchArticle = async () => {
             try {
                 const response = await fetch(
-                    `https://blog.ahsansanadi.site/api/articles/${slug}`,
+                    `/api/blog/articles/${slug}`,
                 );
                 if (!response.ok) {
                     throw new Error("Failed to fetch article");
