@@ -763,9 +763,7 @@ export function BlogArticle({ slug }) {
     useEffect(() => {
         const fetchArticle = async () => {
             try {
-                const response = await fetch(
-                    `/api/blog/articles/${slug}`,
-                );
+                const response = await fetch(`/api/blog/articles/${slug}`);
                 if (!response.ok) {
                     throw new Error("Failed to fetch article");
                 }

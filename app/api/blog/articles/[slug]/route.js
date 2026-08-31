@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 
-export async function GET(request, { params }) {
+export async function GET(_request, { params }) {
     const { slug } = await params;
     const BLOG_URL_API = process.env.BLOG_URL_API;
 
