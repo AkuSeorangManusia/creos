@@ -81,7 +81,7 @@ export default function BootSequence({ onComplete }) {
     return (
         <div
             ref={containerRef}
-            className="fixed inset-0 bg-black text-white p-8 font-mono overflow-y-auto cursor-hidden"
+            className="fixed inset-0 bg-black text-white p-8 font-mono overflow-y-auto cursor-hidden boot-sequence"
         >
             <div className="space-y-1 text-lg">
                 {bootMessages.slice(0, currentLine).map((message) => (

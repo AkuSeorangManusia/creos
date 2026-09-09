@@ -249,6 +249,22 @@ export function Projects() {
                 </button>
                 <button
                     type="button"
+                    className="border-l-4 border-yellow-500 hover:border-4 pl-4 text-left w-full bg-transparent border-0"
+                    onClick={() =>
+                        window.open("https://jogjawaskita.slaviors.id/", "_blank")
+                    }
+                    onMouseDown={(e) => e.stopPropagation()}
+                    style={{ cursor: "pointer" }}
+                >
+                    <h3 className="font-bold text-black text-xl">
+                        JogjaWaskita (Slaviors)
+                    </h3>
+                    <p className="text-gray-600 mt-1 text-lg">
+                        Civic reporting platform but with social interaction features.
+                    </p>
+                </button>
+                <button
+                    type="button"
                     className="border-l-4 border-purple-500 hover:border-4 pl-4 text-left w-full bg-transparent border-0"
                     onClick={() =>
                         window.open("https://ahsansanadi.site", "_self")
