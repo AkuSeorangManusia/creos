@@ -15,6 +15,7 @@ export default function TopPanel({
     const [selectedCategory, setSelectedCategory] = useState("All Apps");
     const [currentTime, setCurrentTime] = useState("");
     const [currentDate, setCurrentDate] = useState("");
+    const deploymentStage = process.env.NEXT_PUBLIC_DEPLOYMENT_STAGE;
     const [draggedIndex, setDraggedIndex] = useState(null);
     const [dragOverIndex, setDragOverIndex] = useState(null);
     const menuRef = useRef(null);
@@ -317,13 +318,24 @@ export default function TopPanel({
                         ))}
                     </div>
 
-                    {/* Mobile Clock */}
+                    {/* Mobile Top Panel */}
                     <div
                         className="md:hidden text-white text-lg px-3 bg-gray-700 border border-gray-600 whitespace-nowrap flex-shrink-0"
                         style={{ paddingLeft: "10px", paddingRight: "10px" }}
                     >
                         {currentTime.substring(0, 5)}
                     </div>
+                    {deploymentStage !== "main" && (
+                        <div
+                            className="md:hidden text-white text-lg px-3 bg-yellow-600 border border-gray-600 whitespace-nowrap flex-shrink-0"
+                            style={{
+                                paddingLeft: "10px",
+                                paddingRight: "10px",
+                            }}
+                        >
+                            {deploymentStage}
+                        </div>
+                    )}
                 </div>
 
                 <div className="hidden md:flex items-center gap-2 ml-2">
@@ -353,6 +365,17 @@ export default function TopPanel({
                     >
                         Close all windows
                     </button>
+                    {deploymentStage !== "main" && (
+                        <div
+                            className="text-white text-lg px-3 bg-yellow-600 border border-gray-600"
+                            style={{
+                                paddingLeft: "10px",
+                                paddingRight: "10px",
+                            }}
+                        >
+                            {deploymentStage}
+                        </div>
+                    )}
                 </div>
             </div>
 

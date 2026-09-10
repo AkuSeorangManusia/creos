@@ -150,6 +150,15 @@ body {
     cursor: none;
 }
 
+.boot-sequence {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.boot-sequence::-webkit-scrollbar {
+    display: none;
+}
+
 /* Window content styling */
 .window-content {
     user-select: text;
