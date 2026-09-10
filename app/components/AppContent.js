@@ -251,7 +251,10 @@ export function Projects() {
                     type="button"
                     className="border-l-4 border-yellow-500 hover:border-4 pl-4 text-left w-full bg-transparent border-0"
                     onClick={() =>
-                        window.open("https://jogjawaskita.slaviors.id/", "_blank")
+                        window.open(
+                            "https://jogjawaskita.slaviors.id/",
+                            "_blank",
+                        )
                     }
                     onMouseDown={(e) => e.stopPropagation()}
                     style={{ cursor: "pointer" }}
@@ -260,7 +263,8 @@ export function Projects() {
                         JogjaWaskita (Slaviors)
                     </h3>
                     <p className="text-gray-600 mt-1 text-lg">
-                        Civic reporting platform but with social interaction features.
+                        Civic reporting platform but with social interaction
+                        features.
                     </p>
                 </button>
                 <button
